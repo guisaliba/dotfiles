@@ -1,0 +1,240 @@
+{
+	"window.titleBarStyle": "custom",
+	"window.density.editorTabHeight": "default",
+	"window.newWindowDimensions": "inherit",
+	"window.menuBarVisibility": "toggle",
+
+	"files.eol": "\n",
+
+	"debug.console.fontFamily": "JetBrains Mono",
+	"debug.console.fontSize": 14,
+	"debug.console.lineHeight": 0,
+
+	"breadcrumbs.enabled": false,
+
+	"editor.tabSize": 2,
+	"editor.fontFamily": "JetBrains Mono",
+	"editor.fontSize": 14,
+	"editor.lineHeight": 24,
+	"editor.fontWeight": "normal",
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": true,
+	"editor.linkedEditing": true,
+	"editor.renderLineHighlight": "all",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+	"editor.scrollbar.horizontal": "hidden",
+	"editor.scrollbar.vertical": "hidden",
+
+	"editor.smoothScrolling": true,
+	"editor.suggestLineHeight": 35,
+	"editor.semanticHighlighting.enabled": false,
+	"editor.inlayHints.fontSize": 12,
+	"editor.renderWhitespace": "none",
+	"editor.inlayHints.padding": true,
+	"editor.suggestSelection": "first",
+	"editor.inlineSuggest.enabled": false,
+	"editor.stickyScroll.enabled": false,
+	"editor.suggest.showSnippets": false,
+	"editor.parameterHints.enabled": false,
+	"editor.accessibilitySupport": "off",
+	"editor.guides.bracketPairs": "active",
+	"editor.cursorSmoothCaretAnimation": "on",
+	"editor.copyWithSyntaxHighlighting": false, // new
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.suggest.snippetsPreventQuickSuggestions": true,
+	"editor.wordSeparators": "`~!@#$%^&*-()=+[{]}\\|;:'\",.<>/?",
+	"editor.fontVariations": "'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'zero'",
+	"editor.fontLigatures": "'ss01','ss02','ss03', 'cv01','cv02','cv10','cv03','cv06','cv09'",
+
+	"workbench.editor.empty.hint": "hidden",
+	"workbench.editor.enablePreview": false,
+	"workbench.tree.renderIndentGuides": "always",
+	"workbench.startupEditor": "readme",
+
+	"explorer.compactFolders": false,
+	"explorer.confirmDragAndDrop": false,
+	"explorer.confirmDelete": false,
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		"package.json": ".eslint*, prettier*, tsconfig*, vite*, pnpm-lock*, package-lock*, bun.lockb",
+		"tailwind.config*": "tailwind.config*, postcss.config*"
+	},
+
+	"prettier.semi": true,
+	"prettier.printWidth": 80,
+	"prettier.singleQuote": false,
+	"prettier.useTabs": true,
+
+	"terminal.integrated.fontFamily": "JetBrains Mono",
+	"terminal.integrated.lineHeight": 1.4,
+	"terminal.integrated.fontSize": 14,
+	"terminal.integrated.allowChords": false,
+	"terminal.integrated.tabs.location": "right",
+	"terminal.integrated.defaultProfile.windows": "Git Bash",
+	"terminal.integrated.env.windows": {},
+
+	"emmet.triggerExpansionOnTab": true,
+	"emmet.showExpandedAbbreviation": "inMarkupAndStylesheetFilesOnly",
+	"emmet.syntaxProfiles": {
+		"javascript": "jsx"
+	},
+	"emmet.includeLanguages": {
+		"javascript": "javascriptreact",
+		"typescript": "typescriptreact",
+		"postcss": "css",
+		"razor": "html"
+	},
+
+	"[markdown]": {
+		"editor.wordWrapColumn": 50,
+		"diffEditor.ignoreTrimWhitespace": false
+	},
+	"[css]": { "editor.suggest.showVariables": true },
+	"[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+	"[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+	"[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+	"[javascriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+	"[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.snippetSuggestions": "bottom"
+	},
+
+	"files.associations": { "*.jsx": "javascriptreact" },
+	"editor.guides.indentation": true,
+	"editor.overviewRulerBorder": false, // new
+	"editor.cursorBlinking": "phase", // new
+	"workbench.tips.enabled": false, // new
+	"security.workspace.trust.enabled": false,
+
+	"http.systemCertificates": false,
+
+	"git.mergeEditor": true,
+	"git.confirmSync": false,
+	"git.autofetch": true,
+	"git.openRepositoryInParentFolders": "never",
+
+	"typescript.tsserver.log": "off",
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"typescript.inlayHints.parameterNames.enabled": "all",
+
+	"javascript.inlayHints.parameterNames.enabled": "all",
+	"javascript.updateImportsOnFileMove.enabled": "never",
+
+	"gitlens.views.showRelativeDateMarkers": false,
+
+	"diffEditor.renderSideBySide": true,
+	"diffEditor.ignoreTrimWhitespace": false,
+
+	"update.mode": "manual",
+
+	"redhat.telemetry.enabled": true,
+	"gitlens.views.scm.grouped.views": {
+		"commits": false,
+		"branches": true,
+		"remotes": true,
+		"stashes": false,
+		"tags": true,
+		"worktrees": true,
+		"contributors": true,
+		"repositories": false,
+		"searchAndCompare": false,
+		"launchpad": false
+	},
+
+	"vscode_custom_css.imports": [
+		"file:///path/to/custom-script.js",
+		"file:///path/to/custom-styles.css"
+	],
+
+	"friendly-ui.customCssPath": "path/to/friendly-ui/friendly-ui-custom-styles.css",
+	"friendly-ui.customJsPath": "path/to/friendly-ui/friendly-ui-custom-script.js",
+	"friendly-ui.disableWorkbenchJs": true,
+
+	"workbench.colorTheme": "Min Dark",
+	"workbench.activityBar.location": "top",
+	"workbench.iconTheme": "symbols",
+	"workbench.tree.indent": 14,
+	"breadcrumbs.symbolPath": "off",
+	"zenMode.hideLineNumbers": false,
+	"search.showLineNumbers": true,
+
+	"editor.snippetSuggestions": "bottom",
+	"editor.suggest.preview": true,
+	"editor.hover.delay": 500,
+	"editor.trimAutoWhitespace": false,
+	"editor.minimap.enabled": true,
+	"editor.minimap.renderCharacters": false,
+
+	"typescript.preferences.includePackageJsonAutoImports": "on",
+	"typescript.preferences.preferTypeOnlyAutoImports": true,
+
+	"javascript.suggest.completeFunctionCalls": true,
+
+	"workbench.list.smoothScrolling": true,
+	"terminal.integrated.smoothScrolling": true,
+	"editor.colorDecoratorsActivatedOn": "click",
+	"workbench.colorCustomizations": {
+		"activityBarBadge.foreground": "#ffffffbf",
+		"activityBarBadge.background": "#3c3c3ca3",
+		"scrollbar.shadow": "#00000000",
+		"editorOverviewRuler.border": "#00000000",
+		"editor.overviewRulerBorder": false,
+		"editorStickyScroll.shadow": "#00000000",
+		"editorGroup.border": "#2b2d30",
+		"editorGroupHeader.tabsBackground": "#2b2d30",
+		"editor.background": "#1c1c1c",
+		"editor.lineHighlightBackground": "#26282d",
+		"editor.lineHighlightBorder": "#00000000",
+		"editorBracketMatch.background": "#43454a",
+		"editorBracketMatch.border": "#00000000",
+		"editorGutter.background": "#00000000",
+		"editorStickyScroll.border": "#393939",
+		"editorWidget.background": "#2B2D30",
+		"focusBorder": "#00000000",
+		"panel.background": "#2B2D30",
+		"scrollbarSlider.background": "#ffffff12",
+		"sideBar.background": "#2B2D30",
+		"sideBarSectionHeader.border": "#00000000",
+		"sideBarSectionHeader.background": "#3d3e42",
+		"statusBar.background": "#2B2D30",
+		"statusBar.debuggingBackground": "#2B2D30",
+		"statusBar.foreground": "#757575",
+		"panel.border": "#00000000",
+		"sideBar.border": "#00000000",
+		"statusBar.noFolderBackground": "#2B2D30",
+		"gitDecoration.modifiedResourceForeground": "#74aeec",
+		"gitDecoration.stageModifiedResourceForeground": "#74aeec",
+		"gitDecoration.addedResourceForeground": "#7fd27fd9",
+		"gitDecoration.renamedResourceForeground": "#74aeec",
+		"gitDecoration.untrackedResourceForeground": "#f7aeae",
+		"gitDecoration.ignoredResourceForeground": "#ffffff3b",
+		"statusBarItem.remoteBackground": "#2B2D30",
+		"statusBarItem.remoteForeground": "#757575",
+		"tab.activeBorderTop": "#00000000",
+		"tab.activeBorder": "#00000000",
+		"tab.border": "#2B2D30",
+		"tab.inactiveBackground": "#2B2D30",
+		"terminal.background": "#1E1F22",
+		"terminal.border": "#2B2D30",
+		"titleBar.activeBackground": "#2B2D30",
+		"titleBar.inactiveBackground": "#2B2D30",
+		"quickInput.background": "#2B2D30",
+		"input.background": "#3d3e42",
+		"button.background": "#3d3e42"
+	},
+	"window.commandCenter": true,
+	"workbench.layoutControl.enabled": false,
+	"[xml]": {
+		"editor.defaultFormatter": "redhat.vscode-xml"
+	},
+	"sonarlint.rules": {
+		"javascript:S125": {
+			"level": "off"
+		}
+	},
+	"git.ignoreRebaseWarning": true,
+	"window.zoomLevel": 0
+}
