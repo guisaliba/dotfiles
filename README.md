@@ -1,3 +1,3 @@
 # dotfiles
 
-remember to put lock.sh into .config/scripts here
+remember to put lock.sh into .config/i3/scripts here
