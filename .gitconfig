@@ -1,0 +1,7 @@
+[user]
+	email = salibagui19@gmail.com
+	name = Guilherme Saliba
+[init]
+	defaultBranch = main
+[push]
+	autoSetupRemote = true
