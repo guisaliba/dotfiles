@@ -11,15 +11,13 @@ label="  ${capacity}%"
 # Color logic
 if [ "$capacity" -lt 20 ]; then
     color="#ff5555"
-elif [ "$capacity" -lt 50 ]; then
-    color="#f1fa8c"
+elif [ "$capacity" -lt 30 ]; then
+    color="#f1fa4a"
 else
-    color="#ffffff"
+    color="#b4befe"
 fi
 
 # Output for i3bar (3 lines: full_text, short_text, color)
 echo "$label"
 echo "$label"
 echo "$color"
-
-
