@@ -58,7 +58,7 @@ function display () {
 	then
 		sek=0$sek
 	fi
-	case $2 in
+	case $2 in # richiamo alla seconda variabile, t
 		w)
 			echo "$work_prefix$min:$sek"
 			echo $min:$sek
@@ -81,7 +81,7 @@ then
 		b) dur=$break_time;;
 	esac 
 	now=$(date +%s)
-	s=$((dur-now+p))
+	s=$((dur-now+p)) # sec mancanti basandosi su orologio e istante chiamata questa fzione 
 	if [ $s -le 0 ] # if time less than 0 then switch mode
 	then
 		case $t in
@@ -116,6 +116,8 @@ case $BLOCK_BUTTON in
 		fi
 	;;
 esac
+# è scritto in modo carino ma non ha sostanziali differenze rispetto al mio , per aggiornarsi sfrutta l'interval integrato. Inoltre è vincolato dalla stampa dell'orario effettivo che non gli permette di andare fuori dal taiming e rimanere sempre in orario. Dovrei evitare la funzione di chiamata e quella di sleep ed optare per un intervallo dentro il blocco. L'aggiornamento nel primo caso non cambia nulla nel secondo mostra secondi differenti ma si può fare.
+
 fi
 
 
