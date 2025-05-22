@@ -11,21 +11,14 @@
 
 set $mod Mod4
 
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below.
+# Font for window titles. Will also be used by the bar unless a different font is used in the bar {} block below.
 font pango:Geist 12
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
 # setup clipse (clipboard manager)
 bindsym $mod+v exec --no-startup-id kitty --class clipsepopup clipse
 for_window [class="^clipsepopup$"] floating enable, resize set 800 500, move absolute position center
 for_window [floating] move position center
-
-# Lock screen before suspend
-# exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/scripts/lock.sh --nofork
 
 # Ensure a Polkit agent is running
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
@@ -59,7 +52,7 @@ bindsym $mod+d exec --no-startup-id rofi -show drun -font 'Geist 14'
 bindsym $mod+m exec ~/.config/i3/scripts/powermenu
 
 # lock screen manually
-bindsym $mod+Shift+Escape exec ~/.config/scripts/lock.sh
+bindsym $mod+Shift+y exec ~/.config/scripts/lock.sh
 
 # change focus
 bindsym $mod+h focus left
@@ -89,7 +82,6 @@ bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
-
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
