@@ -11,14 +11,21 @@
 
 set $mod Mod4
 
-# Font for window titles. Will also be used by the bar unless a different font is used in the bar {} block below.
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below.
 font pango:Geist 12
+
+# This font is widely installed, provides lots of unicode glyphs, right-to-left
+# text rendering and scalability on retina/hidpi displays (thanks to pango).
 #font pango:DejaVu Sans Mono 8
 
 # setup clipse (clipboard manager)
 bindsym $mod+v exec --no-startup-id kitty --class clipsepopup clipse
 for_window [class="^clipsepopup$"] floating enable, resize set 800 500, move absolute position center
 for_window [floating] move position center
+
+# Lock screen before suspend
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/.config/scripts/lock.sh --nofork
 
 # Ensure a Polkit agent is running
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
@@ -27,10 +34,10 @@ exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 exec_always --no-startup-id xrandr --output HDMI-1 --left-of eDP-1 --output eDP-1 --primary
 
 # Random wallpaper across all screens (must pass images folder to feh)
-#exec_always --no-startup-id feh --randomize --bg-scale ~/walls/manga/*
+# exec_always --no-startup-id feh --randomize --bg-scale ~/walls/unix/*
 
 # single wallpaper across all screens (must pass image path to feh)
-exec_always --no-startup-id feh --bg-scale ~/walls/manga/a_black_and_white_image_of_a_girl.jpeg
+exec_always --no-startup-id feh --bg-scale ~/walls/unix/arch-nord-dark.png
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -82,6 +89,7 @@ bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
+
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
