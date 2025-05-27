@@ -3,6 +3,8 @@
 	"window.density.editorTabHeight": "default",
 	"window.newWindowDimensions": "inherit",
 	"window.menuBarVisibility": "toggle",
+	"window.zoomLevel": 0,
+	"window.commandCenter": true,
 
 	"files.eol": "\n",
 
@@ -87,6 +89,7 @@
 		"razor": "html"
 	},
 
+	"files.associations": { "*.jsx": "javascriptreact" },
 	"[markdown]": {
 		"editor.wordWrapColumn": 50,
 		"diffEditor.ignoreTrimWhitespace": false
@@ -101,8 +104,10 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode",
 		"editor.snippetSuggestions": "bottom"
 	},
+	"[xml]": {
+		"editor.defaultFormatter": "GitHub.copilot"
+	},
 
-	"files.associations": { "*.jsx": "javascriptreact" },
 	"editor.guides.indentation": true,
 	"editor.overviewRulerBorder": false, // new
 	"editor.cursorBlinking": "phase", // new
@@ -115,6 +120,7 @@
 	"git.confirmSync": false,
 	"git.autofetch": true,
 	"git.openRepositoryInParentFolders": "never",
+	"git.ignoreRebaseWarning": true,
 
 	"typescript.tsserver.log": "off",
 	"typescript.updateImportsOnFileMove.enabled": "always",
@@ -145,12 +151,12 @@
 	},
 
 	"vscode_custom_css.imports": [
-		"file:///path/to/custom-script.js",
-		"file:///path/to/custom-styles.css"
+		"file:///home/projects/dotfiles/vscode/styles/custom-css-js/custom-script.js",
+		"file:///home/projects/dotfiles/vscode/styles/custom-css-js/custom-styles.css"
 	],
 
-	"friendly-ui.customCssPath": "path/to/friendly-ui/friendly-ui-custom-styles.css",
-	"friendly-ui.customJsPath": "path/to/friendly-ui/friendly-ui-custom-script.js",
+	"friendly-ui.customJsPath": "/home/projects/dotfiles/vscode/styles/friendly-ui/friendly-ui-custom-script.js",
+	"friendly-ui.customCssPath": "/home/projects/dotfiles/vscode/styles/friendly-ui/friendly-ui-custom-styles.css",
 	"friendly-ui.disableWorkbenchJs": true,
 
 	"workbench.colorTheme": "Min Dark",
@@ -173,9 +179,10 @@
 
 	"javascript.suggest.completeFunctionCalls": true,
 
-	"workbench.list.smoothScrolling": true,
 	"terminal.integrated.smoothScrolling": true,
 	"editor.colorDecoratorsActivatedOn": "click",
+	"workbench.list.smoothScrolling": true,
+	"workbench.layoutControl.enabled": false,
 	"workbench.colorCustomizations": {
 		"activityBarBadge.foreground": "#ffffffbf",
 		"activityBarBadge.background": "#3c3c3ca3",
@@ -225,16 +232,12 @@
 		"input.background": "#3d3e42",
 		"button.background": "#3d3e42"
 	},
-	"window.commandCenter": true,
-	"workbench.layoutControl.enabled": false,
-	"[xml]": {
-		"editor.defaultFormatter": "redhat.vscode-xml"
-	},
+
 	"sonarlint.rules": {
 		"javascript:S125": {
 			"level": "off"
 		}
 	},
-	"git.ignoreRebaseWarning": true,
-	"window.zoomLevel": 0
+
+	"python.analysis.typeCheckingMode": "standard"
 }
