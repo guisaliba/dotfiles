@@ -5,7 +5,7 @@
 
 ## Description
 
-Made these dotfiles on a fresh Arch Linux boot. Don't intend for it to be compatible with another distro.
+Made these dotfiles while setting up a fresh Arch Linux boot.
 
 ## Technologies
 
