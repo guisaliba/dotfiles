@@ -4,10 +4,10 @@ layout=$(xkb-switch)
 
 case "$layout" in
     us)
-        echo "🇺🇸 us    "
+        echo "🇺🇸  "
         ;;
     br*|*abnt2*)
-        echo "🇧🇷 br    "
+        echo "🇧🇷  "
         ;;
     *)
         echo "$layout"
