@@ -30,14 +30,16 @@ for_window [floating] move position center
 # Ensure a Polkit agent is running
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
-# Detect and arrange monitors (second monitor will be placed at the left of main monitor)
-exec_always --no-startup-id xrandr --output HDMI-1 --left-of eDP-1 --output eDP-1 --primary
+# Detect and arrange monitors (second monitor will be placed at the <position> of main monitor)
+exec_always --no-startup-id xrandr --output HDMI-1 --left-of eDP-1 --output HDMI-1 --primary
 
 # Random wallpaper across all screens (must pass images folder to feh)
 # exec_always --no-startup-id feh --randomize --bg-scale ~/walls/unix/*
 
 # single wallpaper across all screens (must pass image path to feh)
-exec_always --no-startup-id feh --bg-scale ~/walls/unix/arch-nord-dark.png
+# exec_always --no-startup-id feh --bg-scale ~/walls/manga/a_black_and_white_image_of_a_zombie.jpeg
+# exec_always --no-startup-id feh --bg-scale ~/walls/aerial/a_aerial_view_of_a_snowy_mountain_range.jpg
+exec_always --no-startup-id feh --bg-scale ~/walls/jackb/a_black_background_with_white_text.jpg
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -157,16 +159,16 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+        bindsym j resize shrink width 5 px or 5 ppt
+        bindsym k resize grow height 5 px or 5 ppt
+        bindsym l resize shrink height 5 px or 5 ppt
+        bindsym semicolon resize grow width 5 px or 5 ppt
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 5 px or 5 ppt
+        bindsym Down resize grow height 5 px or 5 ppt
+        bindsym Up resize shrink height 5 px or 5 ppt
+        bindsym Right resize grow width 5 px or 5 ppt
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
@@ -189,7 +191,7 @@ bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
 # Take a screenshot
-bindsym Print exec flameshot gui
+bindsym $mod+p exec flameshot gui
 
 # open installed calculator
 bindsym $mod+c exec --no-startup-id gnome-calculator
@@ -246,10 +248,11 @@ set $iris           #c4a7e7
 set $highlightlow   #21202e
 set $highlightmed   #403d52
 set $highlighthigh  #524f67
+set $white          #ffffff
 
 # borders and windows theming
 # target                 title     bg    text   indicator  border
-client.focused           $rose     $base $text  $rose      $rose
+client.focused           $rose     $base $text  $rose      $white
 client.focused_inactive  $text     $base $text  $overlay $surface
 client.unfocused         $text     $base $text  $overlay   $overlay
 client.urgent            $text     $base $text  $love      $love
@@ -266,13 +269,13 @@ bar {
 	font pango: FiraCode Nerd Font medium 12
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
     position top
-    i3bar_command i3bar --transparency
+    i3bar_command i3bar
     colors {
 		    separator          $pink
-        background #00000000            # 8-digit hex with last two zeroes = 0 opacity (alpha)
+        background #1e1e2eD9            # 8-digit hex with last two zeroes = 0 opacity (alpha)
 		    statusline         $pink
 #                          		border 		        bg		txt	
-		focused_workspace	#1e1e2eD9		#1e1e2eD9	#b4befe 	
+		focused_workspace	#1e1e2eD9		#1e1e2eD9	#ffffff 	
 		active_workspace	#1e1e2eD9	      	#1e1e2eD9 	#a6adc8		
 		inactive_workspace	#1e1e2eD9 		#1e1e2eD9	#7f849c		
 		urgent_workspace	#1e1e2eD9    		#1e1e2eD9  	#a6e3a1  	
