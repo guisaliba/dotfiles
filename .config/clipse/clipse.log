@@ -1,9 +1,0 @@
-2025/05/18 13:10:16 logger.go:19: ERROR: Error decoding JSON for custom_theme.json. Try creating this file manually instead. Err: invalid character '}' looking for beginning of object key string
-2025/05/18 13:10:34 logger.go:19: ERROR: Error decoding JSON for custom_theme.json. Try creating this file manually instead. Err: invalid character '}' looking for beginning of object key string
-2025/05/18 13:10:46 logger.go:19: ERROR: Error decoding JSON for custom_theme.json. Try creating this file manually instead. Err: invalid character '}' looking for beginning of object key string
-2025/05/18 13:10:58 logger.go:19: ERROR: Error decoding JSON for custom_theme.json. Try creating this file manually instead. Err: invalid character '}' looking for beginning of object key string
-2025/05/18 13:14:18 logger.go:19: ERROR: Error decoding JSON for custom_theme.json. Try creating this file manually instead. Err: invalid character '}' looking for beginning of object key string
-2025/05/18 13:14:30 logger.go:19: ERROR: Error decoding JSON for custom_theme.json. Try creating this file manually instead. Err: invalid character '}' looking for beginning of object key string
-2025/05/18 13:14:30 logger.go:19: ERROR: Error decoding JSON for custom_theme.json. Try creating this file manually instead. Err: invalid character '}' looking for beginning of object key string
-2025/05/18 13:14:31 logger.go:19: ERROR: Error decoding JSON for custom_theme.json. Try creating this file manually instead. Err: invalid character '}' looking for beginning of object key string
-2025/05/18 13:14:32 logger.go:19: ERROR: Error decoding JSON for custom_theme.json. Try creating this file manually instead. Err: invalid character '}' looking for beginning of object key string
