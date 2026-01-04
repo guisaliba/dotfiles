@@ -1,0 +1,1 @@
+0 3 * * * /bin/bash /home/guisaliba/dotfiles/zed/sync.sh >> /home/guisaliba/dotfiles/zed/backups/backup_log.txt 2>&1
