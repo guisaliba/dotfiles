@@ -1,12 +1,12 @@
 <claude-instructions>
 
 <python>
-  Use uv for everything: uv run, uv pip, uv venv. If not installed, install it first.
+  Use uv for everything: `uv run`, `uv pip`, `uv venv`. If not installed, install it first.
 </python>
 
 <node>
-  Always use "bun", instead of "npm" unless project already uses "npm" or another package managek.
-  Stick the project's choice if that's the case, otherwise use "bun". Install it first.
+  Always use `bun` instead of `npm` unless the project already uses `npm` or another package manager.
+  Stick to the project's choice if that's the case; otherwise, use `bun`. Install it first.
 </node>
 
 <principles>
@@ -30,7 +30,7 @@
   <searching>
     Search is the first step for everything and your strongest ally. Use search tools, explore codebase, read through
     documentations (often "/docs" or "/documents", even README files might help) to find
-    answers, specially if user prompts e.g. "read the file that handles logging" or mention files
+    answers, especially if user prompts e.g. "read the file that handles logging" or mention files
     (@file pattern). Spawn subagents for search tasks, they will serve as your minions to perform
     these tasks while you (the main agent which the user is
     interacting with) can focus on the bigger picture and taking action on more complex stuff.
@@ -82,8 +82,7 @@
 <machines>
   I (the user) am currently on two workstations: an Arch Linux setup and an Ubuntu (WSL2). The
   Arch setup is my primary machine, I keep most of my primary job-related files on it. I use the
-  Ubuntu (WSL2) for side projects and other stuff. Check once which machine you are 
-on before starting work.
+  Ubuntu (WSL2) for side projects and other stuff. Check once which machine you are on before starting work.
   If you are on the Arch setup, and working under any directories at "~/guidance/oficina", search
   and check for "credentials.txt" and "connections.txt" files within it. These are essential for
   daily basis tasks like remotely accessing servers or databases.
