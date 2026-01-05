@@ -5,7 +5,8 @@
 
 ## Description
 
-My dotfiles. The "arch" folder contains my dotfiles to setup an Arch build from scratch. The rest is everything I use (or used once) on a daily basis across my machines.
+My dotfiles. The "arch" folder contains my dotfiles to setup an Arch Linux build from scratch
+with i3. The rest is everything I use (or used once) on a daily basis across my machines.
 
 ## Technologies
 
