@@ -28,12 +28,12 @@
   </interaction>
 
   <searching>
-    Search is the first step for everything and your strongest ally. Use search tools, explore codebase, read through
-    documentations (often "/docs" or "/documents", even README files might help) to find
+    Search is the first step for everything and your strongest ally. Use search tools, explore codebase,
+    read through documentations (often "/docs" or "/documents", even README files might help) to find
     answers, especially if user prompts e.g. "read the file that handles logging" or mention files
     (@file pattern). Spawn subagents for search tasks, they will serve as your minions to perform
-    these tasks while you (the main agent which the user is
-    interacting with) can focus on the bigger picture and taking action on more complex stuff.
+    these tasks while you (the main agent which the user is interacting with) can focus on the bigger
+    picture and taking action on more complex stuff.
   </searching>
 
   <documentations>
@@ -47,9 +47,9 @@
   <memory>
     Memory is essential for maintaining context and ensuring consistency across interactions. Use memory to
     store important information such as user preferences, project details, and task progress. On your session
-    first request, initialize a "CLAUDE.md" (if not initialized already by the user) file at ".claude" (project's) for that.
-    When user requests to memorize something, you'll always have a place to store
-    it. Additionally, memory can be used to store intermediate results of computations or data that is frequently
+    first request, initialize a "CLAUDE.md" (if not initialized already by the user) file at ".claude" (project's)
+    directory for that. When user requests to memorize something, you'll always have a place to store it.
+    Additionally, memory can be used to store intermediate results of computations or data that is frequently
     accessed but not critical to the overall state of the system.
   </memory>
 
@@ -79,13 +79,29 @@
   </constraint-persistence>
 </principles>
 
+<issues>
+  On your first request, always check on the current project's ".claude" directory for an
+  existing "issues" directory. It should contain files named "xyz.md" where "xyz" is the
+  issue's identifier. If not, create one based on the user's request. These files should
+  contain detailed descriptions of the issue being addressed, including user's requirements,
+  expected behavior, etc. Use these as the user's description and reference for what they
+  are requesting and tasks they're assigning you to.
+</issues>
+
+<git>
+  When working on user's requests, always create a new branch from the current checked out
+  branch. Adhere to Conventional Branches standards and use the issue's ID e.g. "feature/xyz-123"
+  to name your branches. Gradually commit your changes on that branch, adhering to Conventional Commits
+  standards. If the user strictly instructs you otherwise, obey their instructions.
+</git>
+
 <machines>
   I (the user) am currently on two workstations: an Arch Linux setup and an Ubuntu (WSL2). The
   Arch setup is my primary machine, I keep most of my primary job-related files on it. I use the
-  Ubuntu (WSL2) for side projects and other stuff. Check once which machine you are on before starting work.
-  If you are on the Arch setup, and working under any directories at "~/guidance/oficina", search
-  and check for "credentials.txt" and "connections.txt" files within it. These are essential for
-  daily basis tasks like remotely accessing servers or databases.
+  Ubuntu (WSL2) for side projects and other stuff. Check once which machine you are on before
+  starting work. If you are on the Arch setup, use "pwd" to check current working dir path, if
+  it is under "~/guidance/oficina/" search recursively from it for "credentials" and "connections"
+  text files. These are essential for daily basis tasks like remotely accessing servers or databases.
 </machines>
 
 </claude-instructions>
