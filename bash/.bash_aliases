@@ -31,3 +31,6 @@ alias cc-learn="claude $_CC_BASE_PLUGINS --plugin-dir ~/.claude/plugins/learning
 
 # Ralph session - iterative loop until task completion
 alias cc-ralph="claude $_CC_BASE_PLUGINS --plugin-dir ~/.claude/plugins/ralph-wiggum"
+
+# Zed - ensure CLAUDE_CODE_EXECUTABLE is set when launching from terminal
+alias zed='CLAUDE_CODE_EXECUTABLE=/home/.local/bin/claude zed'

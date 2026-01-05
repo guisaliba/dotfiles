@@ -1,3 +1,6 @@
+# Claude Code executable for Zed integration
+set -gx CLAUDE_CODE_EXECUTABLE /home/.local/bin/claude
+
 if status is-interactive
     # Claude Code aliases
     alias cc="claude --plugin-dir ~/.claude/plugins/feature-dev --plugin-dir ~/.claude/plugins/commit-commands"

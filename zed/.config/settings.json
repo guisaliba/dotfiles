@@ -125,32 +125,22 @@
       "user": null,
       "projects": [
         {
-          "paths": [
-            "/home/guisaliba"
-          ]
+          "paths": ["/home/guisaliba"],
         },
         {
-          "paths": [
-            "/home/guisaliba/dotfiles/./"
-          ]
+          "paths": ["/home/guisaliba/dotfiles/./"],
         },
         {
-          "paths": [
-            "/home/guisaliba/projects/homefin"
-          ]
+          "paths": ["/home/guisaliba/projects/homefin"],
         },
         {
-          "paths": [
-            "/home/guisaliba/projects/truze/Truze.API.Indique"
-          ]
+          "paths": ["/home/guisaliba/projects/truze/Truze.API.Indique"],
         },
         {
-          "paths": [
-            "/home/guisaliba/projects/truze/Truze.Interface.Indique"
-          ]
-        }
-      ]
-    }
+          "paths": ["/home/guisaliba/projects/truze/Truze.Interface.Indique"],
+        },
+      ],
+    },
   ],
   "autoscroll_on_clicks": true,
   "autosave": "off",
@@ -256,6 +246,11 @@
   },
   "agent_servers": {
     "claude": {
+      // NOTE: Setting CLAUDE_CODE_EXECUTABLE here might not work (see https://github.com/zed-industries/zed/issues/40327)
+      // Workaround: Set as global environment variable instead and leave "env" empty
+      // - Add it to ~/dotfiles/fish/config.fish
+      // - Set in ~/dotfiles/zed/dev.zed.Zed.desktop
+      // See ~/dotfiles/zed/docs/CLAUDE-CODE.md for details
       "env": {
         "CLAUDE_CODE_EXECUTABLE": "/home/guisaliba/.local/bin/claude",
       },
