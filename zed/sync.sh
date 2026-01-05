@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Cron environment setup
+export HOME="${HOME:-/home/guisaliba}"
+export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_ed25519 -o IdentitiesOnly=yes -o BatchMode=yes"
+
 # Detect platform
 if [[ "$OSTYPE" == "linux-gnu"* ]] && uname -r | grep -qi microsoft; then
     ZED_SOURCE_DIR="/mnt/c/Users/salib/AppData/Roaming/Zed" # WSL2
