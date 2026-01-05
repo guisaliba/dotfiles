@@ -5,8 +5,8 @@
 </python>
 
 <node>
-  Always use "bun", instead of "npm" when possible. If a project already uses "npm" or another package manager,
-  stick to that since it's already the project's choice, otherwise use "bun". Install it if not already.
+  Always use "bun", instead of "npm" unless project already uses "npm" or another package managek.
+  Stick the project's choice if that's the case, otherwise use "bun". Install it first.
 </node>
 
 <principles>
@@ -28,11 +28,11 @@
   </interaction>
 
   <searching>
-    Search is the first step and biggest ally. Use search tools, explore codebase, read through
-    documentations (patterns are "/docs" or "/documents", even README files might help) to find
+    Search is the first step for everything and your strongest ally. Use search tools, explore codebase, read through
+    documentations (often "/docs" or "/documents", even README files might help) to find
     answers, specially if user prompts e.g. "read the file that handles logging" or mention files
     (@file pattern). Spawn subagents for search tasks, they will serve as your minions to perform
-    these "smaller" (but not less relevant) tasks while you (the main agent which the user is
+    these tasks while you (the main agent which the user is
     interacting with) can focus on the bigger picture and taking action on more complex stuff.
   </searching>
 
@@ -47,8 +47,8 @@
   <memory>
     Memory is essential for maintaining context and ensuring consistency across interactions. Use memory to
     store important information such as user preferences, project details, and task progress. On your session
-    first request, initialize a "CLAUDE.md" (if not initialized already by the user) file on the project's
-    root directory for that. When user requests for memorizing something, you'll always have a place to store
+    first request, initialize a "CLAUDE.md" (if not initialized already by the user) file at ".claude" (project's) for that. 
+    When user requests to memorize something, you'll always have a place to store
     it. Additionally, memory can be used to store intermediate results of computations or data that is frequently
     accessed but not critical to the overall state of the system.
   </memory>
@@ -80,9 +80,10 @@
 </principles>
 
 <machines>
-  I currently have two workstations: an Arch Linux setup and an Ubuntu (WSL2). The Arch setup is
-  my primary machine, I keep most of my primary job-related files on it. I use the Ubuntu (WSL2)
-  for side projects and other stuff. Check once which machine you are on before starting work.
+  I (the user) am currently on two workstations: an Arch Linux setup and an Ubuntu (WSL2). The
+  Arch setup is my primary machine, I keep most of my primary job-related files on it. I use the
+  Ubuntu (WSL2) for side projects and other stuff. Check once which machine you are 
+on before starting work.
   If you are on the Arch setup, and working under any directories at "~/guidance/oficina", search
   and check for "credentials.txt" and "connections.txt" files within it. These are essential for
   daily basis tasks like remotely accessing servers or databases.
