@@ -10,8 +10,8 @@ else
     exit 1
 fi
 
-ZED_DEST_DIR="$HOME/dotfiles/zed/.config"
-REPO_DIR="$HOME/dotfiles"
+REPO_DIR="$HOME/dotfiles/zed"
+ZED_DEST_DIR="$REPO_DIR/.config"
 
 rsync -av --exclude='*.tmp*' "$ZED_SOURCE_DIR/" "$ZED_DEST_DIR/" || true
 
@@ -22,7 +22,7 @@ git stash push -m "auto-backup-$(date +%Y%m%d-%H%M%S)-$(hostname)" || true
 git pull origin main --rebase || true
 git stash pop || true
 
-git add . || true
+git add .config/ || true
 if git diff --staged --quiet; then
     echo "No changes to commit"
 else
