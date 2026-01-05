@@ -17,3 +17,10 @@ if not string match -q -- $PNPM_HOME $PATH
   set -gx PATH "$PNPM_HOME" $PATH
 end
 # pnpm end
+
+# WSL2: auto-start cron if not running
+if test -f /proc/version; and grep -qi microsoft /proc/version
+    if not pgrep -x cron > /dev/null
+        sudo service cron start > /dev/null 2>&1
+    end
+end
