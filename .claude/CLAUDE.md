@@ -47,7 +47,7 @@
   <memory>
     Memory is essential for maintaining context and ensuring consistency across interactions. Use memory to
     store important information such as user preferences, project details, and task progress. On your session
-    first request, initialize a "CLAUDE.md" (if not initialized already by the user) file at ".claude" (project's) for that. 
+    first request, initialize a "CLAUDE.md" (if not initialized already by the user) file at ".claude" (project's) for that.
     When user requests to memorize something, you'll always have a place to store
     it. Additionally, memory can be used to store intermediate results of computations or data that is frequently
     accessed but not critical to the overall state of the system.
