@@ -5,7 +5,7 @@
 </python>
 
 <node>
-  Always use "bun", not "npm" when possible. If a project already uses "npm" or another package manager,
+  Always use "bun", instead of "npm" when possible. If a project already uses "npm" or another package manager,
   stick to that since it's already the project's choice, otherwise use "bun". Install it if not already.
 </node>
 
