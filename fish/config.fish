@@ -1,5 +1,10 @@
 if status is-interactive
-    # Commands to run in interactive sessions can go here
+    # Claude Code aliases
+    set -l _cc_base "--plugin-dir ~/.claude/plugins/feature-dev --plugin-dir ~/.claude/plugins/commit-commands"
+
+    alias cc="claude $_cc_base"
+    alias cc-learn="claude $_cc_base --plugin-dir ~/.claude/plugins/learning-output-style"
+    alias cc-ralph="claude $_cc_base --plugin-dir ~/.claude/plugins/ralph-wiggum"
 end
 
 # java
