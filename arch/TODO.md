@@ -1,4 +1,4 @@
-## To-do (Arch)
+## To-do (Arch + i3 setup)
 
 - [] Reloading i3 config makes Redshift apply blue filter again. `killall redshift` on `redshift.sh` doesn't work as well
 - [] Keyboard not being recognized at GRUB boot screen
