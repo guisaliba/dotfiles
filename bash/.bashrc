@@ -1,8 +1,5 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 
-# Claude Code executable for Zed integration
-export CLAUDE_CODE_EXECUTABLE=/home/.local/bin/claude
-
 # Exit if not running interactively
 case $- in
     *i*) ;;
