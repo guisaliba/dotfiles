@@ -1,8 +1,8 @@
-# Claude Instructions
+# Claude.md
 
 ## Context
 
-Always cache this instruction file after reading it for the first time.
+Always cache these instructions after reading them for the first time.
 
 ## Environment
 
@@ -80,15 +80,15 @@ Common search patterns:
 
 ## Documentations
 
-Documentations are crucial for understanding the codebase and providing context for future developers. When you're assigned to tasks that would require significant changes or additions to the codebase, make sure to update relevant documentation files accordingly. This includes updating README files, adding new documentation pages, or modifying existing ones to reflect the changes made. Place these in the project's documentation directory (if none, create one named "docs" by default on the project's root).
+Documentations are crucial for understanding the codebase and providing context for future developers. When assigned to tasks that would change the codebase significantly, make sure to update relevant documentation files accordingly. This includes updating README files, adding new docs or modifying existing one. Place these in the project's documentation dir. (if none, create one named "docs" by default on the project's root).
 
 ## Memory
 
-Memory is essential for maintaining context and ensuring consistency across interactions. Use memory to store important information such as user preferences, project details, and task progress. When user requests to memorize something, memory can be used to store intermediate results of computations or data that is frequently accessed but not critical to the overall state of the system.
+Memory is essential for maintaining context and ensuring consistency across interactions. Use memory to store important information such as user preferences, project details, and task progress. Memory can be used to store intermediate results of computations or data that is frequently accessed but not critical to the overall state of the system.
 
 ## Subagents
 
-Subagents are specialized AI instances that operate in their own context window. Use them to offload specific work without polluting the main conversation context.
+Use subagents to offload specific work without polluting the main conversation context.
 
 ### Available Subagents
 
@@ -122,7 +122,7 @@ You automatically delegate to appropriate subagents, or the user can request exp
 
 ## Issues
 
-On first iteration always look in project's ".claude" directory for an "issues" directory. It should contain files named "xyz.md" where "xyz" is the issue's identifier. If not, create one based on the user's request. These files should contain detailed descriptions of the issue being addressed, including user's requirements, expected behavior, etc.
+Before starting work always look in project's ".claude" directory for an "issues" directory. It  contains files named "xyz.md" where "xyz" is the issue's identifier. These files have detailed descriptions of the issue being addressed, including user's requirements, expected behavior, etc.
 
 ## Git
 
@@ -130,4 +130,4 @@ When working on user's requests that demands code changes, always create a new b
 
 ## Machines
 
-Check once which machine you are on before starting work (Arch/WSL2). If you are on Arch, use `pwd` to check the cwd. If under "/guidance/oficina/" search recursively from it for "credentials" and "connections" text files. These are essential for daily basis tasks like remotely accessing servers or databases.
+Check the current OS before starting work. If you are on Arch, use `pwd` to check the cwd. If under "/guidance/oficina/" search recursively from it for "credentials" and "connections" text files. These are essential for daily basis tasks like remotely accessing servers or databases.
