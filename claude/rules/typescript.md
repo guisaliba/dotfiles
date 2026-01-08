@@ -1,0 +1,28 @@
+---
+paths: "**/*.{ts,tsx}"
+---
+
+## TypeScript Rules
+
+### Naming Conventions
+- PascalCase for interfaces, types, classes, components
+- camelCase for functions, variables, methods
+- SCREAMING_SNAKE_CASE for constants
+- kebab-case for file names
+
+### Type Safety
+- NO `any` without explicit justification comment
+- NO `@ts-ignore` or `@ts-expect-error` without explanation
+- Prefer `unknown` over `any` when type is truly unknown
+- Use explicit return types on exported functions
+
+### Imports
+- Group imports: external → internal → relative
+- Use named exports over default exports
+- No circular dependencies
+- When possible (depends on framework and project) use '@' aliases for imports paths
+
+### Async/Await
+- Always handle promise rejections
+- Use try/catch for async operations
+- Avoid floating promises (unhandled)
