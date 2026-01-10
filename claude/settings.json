@@ -1,3 +1,10 @@
 {
-  "model": "opus"
+  "model": "opus",
+  "enabledPlugins": {
+    "claude-hud@claude-hud": true
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash -c '\"/usr/local/bin/node\" \"$(realpath \"$(ls -td ~/.claude/plugins/cache/claude-hud/claude-hud/*/ 2>/dev/null | head -1)dist/index.js\")\"'"
+  }
 }
