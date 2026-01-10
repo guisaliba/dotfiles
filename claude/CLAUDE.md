@@ -24,7 +24,7 @@
 
 <preferences>
   Node: prefer `bun`; if repo already uses another PM, stick to it; install first.
-  Python: use `uv` for all Python workflows. Prefer: `uv run` (execute), `uv sync` (install from lock), `uv add`/`uv remove` (deps), `uv pip` only when needed, `uv venv` only when required by tooling. Create/update `pyproject.toml` + `uv.lock`; avoid global installs. If `uv` is missing, install it first.
+  Python: use `uv` for all Python workflows. Avoid global installs. If `uv` is missing, install it first.
 </preferences>
 
 <git>
