@@ -10,11 +10,6 @@
   "permissions": {
     "deny": ["Task(Explore)"]
   },
-  "hooks": {
-    "onTaskInvoke": {
-      "message": "Check .claude/agents/ before using Explore"
-    }
-  },
   "fileSuggestion": {
     "type": "command",
     "command": "~/.claude/scripts/file-suggestion.sh"
