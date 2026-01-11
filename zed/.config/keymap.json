@@ -10,13 +10,13 @@
     "context": "Workspace",
     "bindings": {
       // "shift shift": "file_finder::Toggle"
-      "ctrl-alt-c": ["agent::NewExternalAgentThread", { "agent": "claude_code" }]
-    }
+      "ctrl-alt-c": ["agent::NewExternalAgentThread", { "agent": "claude_code" }],
+    },
   },
   {
     "context": "Editor && vim_mode == insert",
     "bindings": {
       // "j k": "vim::NormalBefore"
-    }
-  }
+    },
+  },
 ]

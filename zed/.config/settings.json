@@ -14,7 +14,7 @@
   "theme": {
     "mode": "system",
     "light": "Min Light (Solid)",
-    "dark": "Min Dark (Solid)"
+    "dark": "Min Dark (Solid)",
   },
   "auto_install_extensions": {
     "html": true,
@@ -31,36 +31,36 @@
     "min-theme": true,
     "symbols": true,
     "editorconfig": true,
-    "catppuccin-icons": true
+    "catppuccin-icons": true,
   },
   "git": {
     "path_style": "file_path_first",
     "branch_picker": {
-      "show_author_name": true
+      "show_author_name": true,
     },
     "hunk_style": "staged_hollow",
     "inline_blame": {
       "delay_ms": 0,
-      "enabled": true
+      "enabled": true,
     },
     "git_gutter": "tracked_files",
     "blame": {
-      "show_avatar": true
-    }
+      "show_avatar": true,
+    },
   },
   "git_panel": {
     "collapse_untracked_diff": false,
     "sort_by_path": true,
-    "status_style": "label_color"
+    "status_style": "label_color",
   },
   "outline_panel": {
-    "git_status": true
+    "git_status": true,
   },
   "features": {
-    "edit_prediction_provider": "zed"
+    "edit_prediction_provider": "copilot",
   },
   "active_pane_modifiers": {
-    "inactive_opacity": 1.0
+    "inactive_opacity": 1.0,
   },
   "use_system_window_tabs": false,
   "bottom_dock_layout": "contained",
@@ -69,42 +69,43 @@
     "activate_on_close": "left_neighbour",
     "close_position": "left",
     "file_icons": true,
-    "git_status": true
+    "git_status": true,
   },
   "tab_bar": {
     "show_tab_bar_buttons": true,
-    "show": true
+    "show": true,
   },
   "title_bar": {
+    "show_branch_name": true,
     "show_menus": false,
     "show_onboarding_banner": true,
     "show_project_items": false,
-    "show_branch_icon": true
+    "show_branch_icon": true,
   },
   "debugger": {
     "save_breakpoints": false,
     "dock": "left",
-    "button": false
+    "button": false,
   },
   "status_bar": {
     "cursor_position_button": false,
-    "active_language_button": true
+    "active_language_button": true,
   },
   "file_finder": {
-    "modal_max_width": "small"
+    "modal_max_width": "small",
   },
   "search": {
-    "button": false,
+    "button": true,
     "center_on_match": true,
-    "include_ignored": false
+    "include_ignored": false,
   },
   "prettier": {
     "allowed": true,
-    "plugins": []
+    "plugins": [],
   },
   "diagnostics": {
     "button": true,
-    "include_warnings": true
+    "include_warnings": true,
   },
   "word_diff_enabled": true,
   "colorize_brackets": true,
@@ -116,7 +117,7 @@
     "code_actions": false,
     "selections_menu": true,
     "quick_actions": false,
-    "breadcrumbs": false
+    "breadcrumbs": false,
   },
   "wsl_connections": [
     {
@@ -124,19 +125,39 @@
       "user": null,
       "projects": [
         {
-          "paths": ["/home/guisaliba"]
+          "paths": [
+            "/home/guisaliba"
+          ]
         },
         {
-          "paths": ["/home/guisaliba/dotfiles/./"]
+          "paths": [
+            "/home/guisaliba/.claude"
+          ]
         },
         {
-          "paths": ["/home/guisaliba/projects/homefin"]
+          "paths": [
+            "/home/guisaliba/dotfiles/./"
+          ]
         },
         {
-          "paths": ["/home/guisaliba/projects/truze/Truze.API.Indique"]
+          "paths": [
+            "/home/guisaliba/projects/homefin"
+          ]
         },
         {
-          "paths": ["/home/guisaliba/projects/truze/Truze.Interface.Indique"]
+          "paths": [
+            "/home/guisaliba/projects/truze/Truze.API.Indique"
+          ]
+        },
+        {
+          "paths": [
+            "/home/guisaliba/projects/truze/Truze.Interface.Indique"
+          ]
+        },
+        {
+          "paths": [
+            "/home/guisaliba/projects/truze/Truze.Interface.LandingPage"
+          ]
         }
       ]
     }
@@ -146,7 +167,7 @@
   "agent": {
     "default_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4.5"
+      "model": "gpt-5.1-codex",
     },
     "always_allow_tool_actions": true,
     "default_profile": "write",
@@ -154,7 +175,7 @@
       "ask": {
         "default_model": {
           "provider": "copilot_chat",
-          "model": "claude-sonnet-4.5"
+          "model": "claude-sonnet-4.5",
         },
         "name": "Ask",
         "tools": {
@@ -168,15 +189,15 @@
           "list_directory": true,
           "grep": true,
           "find_path": true,
-          "fetch": true
+          "fetch": true,
         },
         "enable_all_context_servers": false,
-        "context_servers": {}
+        "context_servers": {},
       },
       "write": {
         "default_model": {
           "provider": "copilot_chat",
-          "model": "claude-sonnet-4.5"
+          "model": "claude-sonnet-4.5",
         },
         "name": "Write",
         "tools": {
@@ -194,28 +215,28 @@
           "list_directory": true,
           "grep": true,
           "find_path": true,
-          "fetch": true
+          "fetch": true,
         },
         "enable_all_context_servers": false,
-        "context_servers": {}
-      }
+        "context_servers": {},
+      },
     },
     "dock": "right",
     "inline_assistant_model": {
       "provider": "google",
-      "model": "gemini-3-flash-preview"
+      "model": "gemini-3-flash-preview",
     },
     "inline_alternatives": [
       {
         "provider": "copilot_chat",
-        "model": "claude-sonnet-4.5"
+        "model": "claude-sonnet-4.5",
       },
       {
         "provider": "copilot_chat",
-        "model": "gpt-5.1-codex"
-      }
+        "model": "gpt-5.1-codex",
+      },
     ],
-    "model_parameters": []
+    "model_parameters": [],
   },
   "agent_servers": {
     "claude": {
@@ -224,14 +245,14 @@
       // - Add it to ~/dotfiles/fish/config.fish
       // See ~/dotfiles/zed/docs/CLAUDE-CODE.md for details
       "env": {
-        "CLAUDE_CODE_EXECUTABLE": "/home/guisaliba/.local/bin/claude"
-      }
-    }
+        "CLAUDE_CODE_EXECUTABLE": "/home/guisaliba/.local/bin/claude",
+      },
+    },
   },
   "icon_theme": "Symbols Icon Theme",
   "terminal": {
     "toolbar": {
-      "breadcrumbs": false
+      "breadcrumbs": false,
     },
     "keep_selection_on_copy": false,
     "blinking": "terminal_controlled",
@@ -242,8 +263,8 @@
     "font_size": 14.0,
     "font_family": "JetBrains Mono",
     "line_height": {
-      "custom": 1.6
-    }
+      "custom": 1.6,
+    },
   },
   "project_panel": {
     "indent_size": 20.0,
@@ -253,22 +274,22 @@
     "dock": "left",
     "button": false,
     "show_diagnostics": "all",
-    "auto_fold_dirs": false
+    "auto_fold_dirs": false,
   },
   "base_keymap": "VSCode",
   "preview_tabs": {
     "enable_preview_file_from_code_navigation": true,
     "enable_preview_from_file_finder": true,
-    "enabled": true
+    "enabled": true,
   },
   "show_signature_help_after_edits": false,
   "auto_signature_help": false,
   "sticky_scroll": {
-    "enabled": true
+    "enabled": true,
   },
   "minimap": {
     "thumb": "hover",
-    "show": "never"
+    "show": "never",
   },
   "scrollbar": {
     "git_diff": true,
@@ -278,8 +299,8 @@
     "show": "always",
     "axes": {
       "horizontal": false,
-      "vertical": true
-    }
+      "vertical": true,
+    },
   },
   "hover_popover_delay": 500,
   "current_line_highlight": "gutter",
@@ -288,10 +309,10 @@
   "buffer_font_family": "JetBrains Mono",
   "buffer_font_features": {
     "calt": 1,
-    "liga": 1
+    "liga": 1,
   },
   "file_types": {
-    "javascriptreact": ["*.jsx"]
+    "javascriptreact": ["*.jsx"],
   },
   "auto_indent_on_paste": true,
   "linked_edits": true,
@@ -301,12 +322,12 @@
   "indent_guides": {
     "background_coloring": "disabled",
     "coloring": "indent_aware",
-    "enabled": true
+    "enabled": true,
   },
   "calls": {
-    "mute_on_join": true
+    "mute_on_join": true,
   },
   "collaboration_panel": {
-    "button": false
-  }
+    "button": false,
+  },
 }
