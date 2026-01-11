@@ -10,7 +10,7 @@ echo "Setting up Claude config symlinks..."
 mkdir -p "$CLAUDE_DIR"
 
 # Config items to symlink
-CONFIG_ITEMS="CLAUDE.md settings.json agents commands hooks rules skills plugins"
+CONFIG_ITEMS="CLAUDE.md settings.json agents commands hooks rules skills plugins scripts"
 
 for item in $CONFIG_ITEMS; do
     src="$DOTFILES_CLAUDE/$item"
@@ -31,6 +31,6 @@ done
 
 echo ""
 echo "Done. Start 'claude' and reinstall plugins:"
-echo "  /plugin marketplace add jarrodwatts/claude-hud"
-echo "  /plugin install claude-hud"
-echo "  /claude-hud:setup"
+echo "  /plugin marketplace add <author>/<plugin-name>"
+echo "  /plugin install <plugin-name>"
+echo "  /<plugin>:setup"
