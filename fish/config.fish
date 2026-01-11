@@ -1,4 +1,8 @@
+fish_add_path ~/.local/bin
+
 if status is-interactive
+    starship init fish | source
+
     # Claude Code aliases
     alias cc="claude --plugin-dir ~/.claude/plugins/feature-dev --plugin-dir ~/.claude/plugins/commit-commands"
     alias cc-learn="claude --plugin-dir ~/.claude/plugins/feature-dev --plugin-dir ~/.claude/plugins/commit-commands --plugin-dir ~/.claude/plugins/learning-output-style"
@@ -17,10 +21,3 @@ if not string match -q -- $PNPM_HOME $PATH
   set -gx PATH "$PNPM_HOME" $PATH
 end
 # pnpm end
-
-# WSL2: auto-start cron if not running
-if test -f /proc/version; and grep -qi microsoft /proc/version
-    if not pgrep -x cron > /dev/null
-        sudo service cron start > /dev/null 2>&1
-    end
-end
