@@ -170,7 +170,7 @@
       "model": "gpt-5.1-codex",
     },
     "always_allow_tool_actions": true,
-    "default_profile": "write",
+    "default_profile": "ask",
     "profiles": {
       "ask": {
         "default_model": {
