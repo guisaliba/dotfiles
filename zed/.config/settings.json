@@ -136,6 +136,11 @@
         },
         {
           "paths": [
+            "/home/guisaliba/.config"
+          ]
+        },
+        {
+          "paths": [
             "/home/guisaliba/dotfiles/./"
           ]
         },
