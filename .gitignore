@@ -1,3 +1,8 @@
+# Log files, backups and temporary files
+*.log
+*.tmp
+*.bak
+
 backups/
 
 # Claude - only config should be here, ignore any accidental runtime files
