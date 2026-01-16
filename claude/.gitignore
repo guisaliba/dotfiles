@@ -1,0 +1,19 @@
+# Claude - only config should be here, ignore any accidental runtime files
+.credentials.json
+cache/
+debug/
+projects/
+shell-snapshots/
+statsig/
+todos/
+history.jsonl
+file-history/
+plans/
+session-env/
+.claude/
+
+# Plugin runtime (keep custom plugins, ignore cache/marketplace)
+plugins/cache/
+plugins/marketplaces/
+plugins/*.json
+plugins/**/.usage-cache.json
