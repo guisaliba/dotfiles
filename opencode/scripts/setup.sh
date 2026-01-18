@@ -29,6 +29,18 @@ for item in $CONFIG_ITEMS; do
     fi
 done
 
+AGENTS_SRC="$HOME/dotfiles/AGENTS.md"
+AGENTS_DEST="$OPENCODE_DIR/AGENTS.md"
+
+if [ -e "$AGENTS_SRC" ]; then
+    [ -L "$AGENTS_DEST" ] && rm "$AGENTS_DEST"
+    [ -e "$AGENTS_DEST" ] && mv "$AGENTS_DEST" "$AGENTS_DEST.bak.$(date +%s)"
+    ln -s "$AGENTS_SRC" "$AGENTS_DEST"
+    echo "  Linked: AGENTS.md"
+else
+    echo "  Skipped (not found): AGENTS.md"
+fi
+
 echo ""
 echo "Done. Install OpenCode dependencies:"
 echo "  cd ~/.opencode && bun install"
