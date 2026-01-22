@@ -49,6 +49,7 @@
     },
   },
   "git_panel": {
+    "tree_view": true,
     "collapse_untracked_diff": false,
     "sort_by_path": true,
     "status_style": "label_color",
@@ -151,7 +152,37 @@
         },
         {
           "paths": [
+            "/home/guisaliba/projects/active/truze"
+          ]
+        },
+        {
+          "paths": [
+            "/home/guisaliba/projects/active/truze/Truze.API.Indique"
+          ]
+        },
+        {
+          "paths": [
+            "/home/guisaliba/projects/active/truze/Truze.Interface.Agencia"
+          ]
+        },
+        {
+          "paths": [
+            "/home/guisaliba/projects/active/truze/Truze.Interface.Indique"
+          ]
+        },
+        {
+          "paths": [
             "/home/guisaliba/projects/active/truze/Truze.Interface.LandingPage"
+          ]
+        },
+        {
+          "paths": [
+            "/home/guisaliba/projects/active/truze/Truze.Interface.SAC"
+          ]
+        },
+        {
+          "paths": [
+            "/home/guisaliba/projects/active/truze/truze-lp-prototipo"
           ]
         },
         {
