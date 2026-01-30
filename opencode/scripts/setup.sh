@@ -2,11 +2,11 @@
 set -e
 
 DOTFILES_OPENCODE="$HOME/dotfiles/opencode"
-OPENCODE_DIR="$HOME/.opencode"
+OPENCODE_DIR="$HOME/.config/opencode"
 
 echo "Setting up OpenCode config symlinks..."
 
-# Create .opencode if doesn't exist
+# Create config dir if it doesn't exist
 mkdir -p "$OPENCODE_DIR"
 
 # Config items to symlink
@@ -43,4 +43,4 @@ fi
 
 echo ""
 echo "Done. Install OpenCode dependencies:"
-echo "  cd ~/.opencode && bun install"
+echo "  cd ~/.config/opencode && bun install"
