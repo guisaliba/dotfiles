@@ -17,3 +17,4 @@ plugins/cache/
 plugins/marketplaces/
 plugins/*.json
 plugins/**/.usage-cache.json
+!plugins/known_marketplaces.json
