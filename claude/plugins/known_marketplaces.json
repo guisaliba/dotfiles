@@ -1,0 +1,10 @@
+{
+  "claude-hud": {
+    "source": {
+      "source": "github",
+      "repo": "jarrodwatts/claude-hud"
+    },
+    "installLocation": "/home/guisaliba/.claude/plugins/marketplaces/claude-hud",
+    "lastUpdated": "2026-02-23T01:03:14.074Z"
+  }
+}
