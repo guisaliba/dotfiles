@@ -1,43 +1,9 @@
 {
-	// "custom-ui-style.font.sansSerif": "Geist Mono, system-ui, -apple-system, Segoe UI, sans-serif",
-	// "custom-ui-style.font.monospace": "",
-
-	// "custom-ui-style.stylesheet": {
-	// 	".monaco-workbench": {
-	// 		"font-family": "var(--cus-sans) !important",
-	// 	},
-	// 	".monaco-workbench .part.titlebar, .monaco-workbench .tabs-container, .monaco-workbench .editor-group-container .title": {
-	// 		"font-family": "var(--cus-sans) !important",
-	// 	},
-	// 	".monaco-workbench .sidebar, .monaco-workbench .auxiliarybar": {
-	// 		"font-family": "var(--cus-sans) !important",
-	// 	},
-	// 	".monaco-workbench .statusbar": {
-	// 		"font-family": "var(--cus-sans) !important",
-	// 	},
-	// 	".monaco-workbench input, .monaco-workbench textarea, .monaco-workbench .monaco-inputbox, .monaco-workbench .quick-input-widget": {
-	// 		"font-family": "var(--cus-sans) !important",
-	// 	},
-	// 	".monaco-workbench .panel, .monaco-workbench .panel *": {
-	// 		"font-family": "var(--cus-sans) !important",
-	// 	},
-	// 	".monaco-workbench .xterm, .monaco-workbench .xterm *": {
-	// 		"font-family": "JetBrains Mono Nerd Font, JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important",
-	// 	},
-	// 	".monaco-editor, .monaco-editor *": {
-	// 		"font-family": "JetBrains Mono, Cascadia Code, Fira Code, monospace !important",
-	// 	},
-	// 	".monaco-workbench .part.titlebar .window-title": {
-	// 		"display": "none !important",
-	// 	},
-	// },
-
 	"update.mode": "default",
 
 	"window.titleBarStyle": "custom",
 	"window.density.editorTabHeight": "default",
 	"window.newWindowDimensions": "inherit",
-	"window.zoomLevel": 0,
 	"window.commandCenter": false,
 	"window.menuBarVisibility": "compact",
 
@@ -149,37 +115,17 @@
 	},
 	"chat.tools.terminal.autoApprove": {
 		"mv": true,
-		"npm install": true,
-		"npm run format": true,
-		"mvn spring-boot:run": true,
-		"git rev-parse": true,
-		"git add": true,
-		"git commit": true,
-		"npm run build": true,
-		"npm run dev": true,
-		"docker-compose": true,
-		"docker ps": true,
-		"docker logs": true,
 		"mkdir": true,
 		"cp": true,
-		"go": true,
 		"lsof": true,
-		"npm run start": true,
-		"git fetch": true,
-		"git restore": true,
 		"md5sum": true
 	},
 	"chat.agent.maxRequests": 100,
 	"chat.mcp.gallery.enabled": true,
-	"chat.agentSessionsViewLocation": "single-view",
-	"chat.showAgentSessionsViewDescription": true,
 	"chat.agent.thinkingStyle": "collapsedPreview",
 	"chat.editing.confirmEditRequestRemoval": false,
-	"chat.commandCenter.enabled": false,
 	"chat.edits2.enabled": true,
-	"chat.emptyState.history.enabled": true,
 	"chat.notifyWindowOnResponseReceived": false,
-	"chat.todoListTool.descriptionField": true,
 
 	"explorer.compactFolders": false,
 	"explorer.confirmDragAndDrop": false,
@@ -189,15 +135,6 @@
 		"package.json": ".eslint*, prettier*, tsconfig*, vite*, pnpm-lock*, package-lock*, bun.lockb",
 		"tailwind.config*": "tailwind.config*, postcss.config*"
 	},
-
-	"files.autoSaveWorkspaceFilesOnly": true,
-	"files.associations": { "*.jsx": "javascriptreact" },
-
-	"prettier.semi": true,
-	"prettier.printWidth": 80,
-	"prettier.singleQuote": false,
-	"prettier.useTabs": true,
-	"prettier.useEditorConfig": true,
 
 	"eslint.codeActionsOnSave.mode": "all",
 	"eslint.format.enable": true,
@@ -233,68 +170,6 @@
 	"terminal.integrated.defaultProfile.windows": "Git Bash",
 	"terminal.integrated.env.windows": {},
 	"terminal.integrated.fontLigatures.enabled": true,
-	"terminal.integrated.fontLigatures.fallbackLigatures": [
-		"<--",
-		"<---",
-		"<<-",
-		"<-",
-		"->",
-		"->>",
-		"-->",
-		"--->",
-		"<==",
-		"<===",
-		"<<=",
-		"<=",
-		"=>",
-		"=>>",
-		"==>",
-		"===>",
-		">=",
-		">>=",
-		"<->",
-		"<-->",
-		"<--->",
-		"<---->",
-		"<=>",
-		"<==>",
-		"<===>",
-		"<====>",
-		"::",
-		":::",
-		"<~~",
-		"</",
-		"</>",
-		"/>",
-		"~~>",
-		"==",
-		"!=",
-		"/=",
-		"~=",
-		"<>",
-		"===",
-		"!==",
-		"!===",
-		"<:",
-		":=",
-		"*=",
-		"*+",
-		"<*",
-		"<*>",
-		"*>",
-		"<|",
-		"<|>",
-		"|>",
-		"+*",
-		"=*",
-		"=:",
-		":>",
-		"/*",
-		"*/",
-		"+++",
-		"<!--",
-		"<!---"
-	],
 
 	"emmet.triggerExpansionOnTab": true,
 	"emmet.showExpandedAbbreviation": "inMarkupAndStylesheetFilesOnly",
@@ -308,22 +183,60 @@
 		"razor": "html"
 	},
 
+	"files.autoSaveWorkspaceFilesOnly": true,
+	"files.associations": { "*.jsx": "javascriptreact" },
+
+	"prettier.semi": true,
+	"prettier.printWidth": 80,
+	"prettier.singleQuote": false,
+	"prettier.useTabs": true,
+	"prettier.useEditorConfig": true,
+
 	"[markdown]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
 		"editor.wordWrapColumn": 50,
 		"diffEditor.ignoreTrimWhitespace": false
 	},
-	"[css]": { "editor.suggest.showVariables": true },
-	"[html]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-	"[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-	"[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-	"[javascriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
-	"[typescriptreact]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+	"[css]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.suggest.showVariables": true
+	},
+	"[html]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[json]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescript]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascriptreact]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescriptreact]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
 	"[javascript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
-		"editor.snippetSuggestions": "bottom"
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[java]": {
-		"editor.defaultFormatter": "redhat.java"
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[dockercompose]": {
 		"editor.insertSpaces": true,
@@ -334,27 +247,43 @@
 			"comments": false,
 			"strings": true
 		},
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "redhat.vscode-yaml"
 	},
 	"[github-actions-workflow]": {
+		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "redhat.vscode-yaml"
 	},
 	"[jsonc]": {
+		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[svelte]": {
+		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[xml]": {
-		"editor.defaultFormatter": "redhat.vscode-xml"
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[prisma]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "Prisma.prisma"
 	},
 	"[python]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
 		"diffEditor.ignoreTrimWhitespace": false
+	},
+	"[liquid]": {
+		"editor.formatOnPaste": true,
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "Shopify.theme-check-vscode"
 	},
 
 	"security.workspace.trust.enabled": false,
@@ -389,8 +318,6 @@
 
 	"diffEditor.renderSideBySide": true,
 	"diffEditor.ignoreTrimWhitespace": false,
-
-	"redhat.telemetry.enabled": true,
 
 	"gitlens.views.scm.grouped.views": {
 		"commits": false,
