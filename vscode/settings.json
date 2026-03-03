@@ -355,5 +355,7 @@
 		"shellscript",
 		"yaml",
 		"yml"
-	]
+	],
+
+	"redhat.telemetry.enabled": false
 }
