@@ -5,6 +5,12 @@
     "showAgents": false,
     "showTodos": true,
     "showDuration": false,
-    "showConfigCounts": true
+    "showConfigCounts": false
+  },
+  "gitStatus": {
+    "enabled": true,
+    "showDirty": true,
+    "showAheadBehind": false,
+    "showFileStats": true
   }
 }
