@@ -1,4 +1,8 @@
 fish_add_path ~/.local/bin
+fish_add_path ~/bin
+
+# cc-recall
+set -gx CC_RECALL_VAULT /mnt/c/obsidian_vault # wsl2 path to vault
 
 if status is-interactive
     starship init fish | source
@@ -84,3 +88,8 @@ if not string match -q -- $PNPM_HOME $PATH
   set -gx PATH "$PNPM_HOME" $PATH
 end
 # pnpm end
+
+# opencode
+fish_add_path /home/guisaliba/.opencode/bin
+# bun
+fish_add_path /home/guisaliba/.bun/bin
