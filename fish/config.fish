@@ -2,12 +2,75 @@ fish_add_path ~/.local/bin
 
 if status is-interactive
     starship init fish | source
-
-    # Claude Code aliases
-    alias cc="claude --plugin-dir ~/.claude/plugins/feature-dev --plugin-dir ~/.claude/plugins/commit-commands"
-    alias cc-learn="claude --plugin-dir ~/.claude/plugins/feature-dev --plugin-dir ~/.claude/plugins/commit-commands --plugin-dir ~/.claude/plugins/learning-output-style"
-    alias cc-ralph="claude --plugin-dir ~/.claude/plugins/feature-dev --plugin-dir ~/.claude/plugins/commit-commands --plugin-dir ~/.claude/plugins/ralph-wiggum"
 end
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Claude Code: Cloud-first + Remote Control helpers
+# Auto-names sessions as "purpose | folder [active|inactive]"
+# Usage:
+#   cc-cloud "Implement billing"   → cloud session (teleportable)
+#   cc-rc                         → Remote Control session (local, web-drivable)
+#   cc-tp <id>                    → teleport web session to local
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Auto-generate session name from your ~/projects/active|inactive structure
+function __cc_session_name
+    set folder (basename (pwd))
+    set project_root (dirname (pwd))
+    set status "active"
+
+    # Detect if in ~/projects/inactive/
+    if string match -q "~/projects/inactive/*" $project_root
+        set status "inactive"
+    end
+
+    # Prompt for purpose, default to folder name
+    echo "Session purpose for '$folder' (default: $folder [$status])?"
+    read -l -P "" purpose
+    if test -z "$purpose"
+        set purpose $folder
+    end
+
+    echo "$purpose | $folder [$status]"
+end
+
+# 1) Start CLOUD Claude Code task (shows in web, teleportable anywhere)
+function cc-cloud
+    if test (count $argv) -eq 0
+        echo "usage: cc-cloud \"Task description\""
+        return 1
+    end
+
+    set session_name (__cc_session_name)
+    echo "Starting cloud session: $session_name"
+    # claude --remote creates web session; --name may not exist, use /rename inside if needed
+    claude --remote --name "$session_name" "$argv"
+end
+
+# 2) Start LOCAL session with Remote Control (drive from web while local runs)
+function cc-rc
+    set session_name (__cc_session_name)
+    echo "Starting/attaching Remote Control: $session_name"
+    claude remote-control --name "$session_name"
+end
+
+# 3) Teleport existing web/cloud session into local CLI
+function cc-tp
+    if test (count $argv) -eq 0
+        echo "usage: cc-tp <session-id-or-name>"
+        return 1
+    end
+
+    echo "Teleporting session '$argv[1]' to local..."
+    claude --teleport "$argv[1]"
+end
+
+# 4) Quick list/resume local sessions (bonus)
+function cc-ls
+    echo "Local sessions in (pwd):"
+    claude --resume  # shows picker without resuming
+end
+# ═══════════════════════════════════════════════════════════════════════════════
 
 # java
 set -gx JAVA_HOME /usr/lib/jvm/java-21-openjdk-amd64
