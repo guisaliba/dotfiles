@@ -89,6 +89,12 @@ if not string match -q -- $PNPM_HOME $PATH
 end
 # pnpm end
 
+# cursor: override to always open in Agent Window (--glass)
+# if --glass breaks on a Cursor update, remove this function and use cursor-agent instead
+function cursor
+    /mnt/c/Program\ Files/cursor/resources/app/bin/cursor --glass $argv
+end
+
 # opencode
 fish_add_path /home/guisaliba/.opencode/bin
 # bun
