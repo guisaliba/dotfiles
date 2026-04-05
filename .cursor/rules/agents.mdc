@@ -1,3 +1,10 @@
+---
+description: Agent instructions (generated from AGENTS.md - run cursor/scripts/sync-agents-rule.sh after edits)
+alwaysApply: true
+---
+
+<!-- Generated file: do not edit by hand. Source: AGENTS.md at repository root. -->
+
 # AGENTS.md
 
 ## Role
