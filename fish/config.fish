@@ -92,10 +92,15 @@ end
 # cursor: override to always open in Agent Window (--glass)
 # if --glass breaks on a Cursor update, remove this function and use cursor-agent instead
 function cursor
-    /mnt/c/Program\ Files/cursor/resources/app/bin/cursor --glass $argv
+    if grep -qi microsoft /proc/version 2>/dev/null
+        /mnt/c/Program\ Files/cursor/resources/app/bin/cursor --glass $argv
+    else
+        /usr/bin/cursor --glass $argv
+    end
 end
 
 # opencode
 fish_add_path /home/guisaliba/.opencode/bin
+
 # bun
 fish_add_path /home/guisaliba/.bun/bin
