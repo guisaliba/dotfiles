@@ -39,5 +39,10 @@
     "key": "ctrl+shift+a",
     "command": "-notification.acceptPrimaryAction",
     "when": "notificationFocus || notificationToastsVisible"
+  },
+  {
+    "key": "ctrl+alt+s",
+    "command": "workbench.action.toggleUnifiedSidebarFromKeyboard",
+    "when": "!isAuxiliaryWindowFocusedContext"
   }
 ]
