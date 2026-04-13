@@ -1,20 +1,21 @@
 # Cursor
 
-Cursor picks up **project rules** from `.cursor/rules/` at the workspace root. This repo keeps agent instructions in the root `**AGENTS.md`** and mirrors them into an always-on rule so agents get the same text without relying on the model to open the file first.
+Cursor picks up **user-level rules** from `~/.cursor/rules/` and applies them to every workspace. The global agent rules and the always-on Caveman rule are generated from this repo by `agents/sync-agents.sh`.
 
-## Keeping the rule in sync
+## Keeping rules in sync
 
-After you edit `**AGENTS.md**` at the repository root, regenerate the Cursor rule:
+After editing `**agents/AGENTS.base.md`** or `**agents/cursor.overlay.md**`, regenerate the Cursor rule files:
 
 ```bash
-./cursor/scripts/sync-agents-rule.sh
+~/dotfiles/agents/sync-agents.sh
 ```
 
-That writes `**.cursor/rules/agents.mdc**` (`alwaysApply: true`). Commit both `AGENTS.md` and `.cursor/rules/agents.mdc` when you change instructions.
+That writes:
 
-## Other workspaces
+- `**~/.cursor/rules/00-global.mdc**` - base + cursor overlay (`alwaysApply: true`)
+- `**~/.cursor/rules/10-caveman.mdc**` - Caveman mode rule (`alwaysApply: true`)
 
-Rules apply to the folder you open in Cursor. To reuse these instructions in another repo, symlink or copy `**agents.mdc**` (or the whole `**.cursor/rules/**` directory) into that project, or symlink `**AGENTS.md**` and run the sync script from a checkout that contains this `cursor/scripts/` layout.
+Both files are regular (non-symlink) files; edits to the generated files are overwritten on the next sync. Change behavior at the source in `agents/`.
 
 ## Files in this folder
 
