@@ -5,6 +5,14 @@
       "repo": "jarrodwatts/claude-hud"
     },
     "installLocation": "/home/guisaliba/.claude/plugins/marketplaces/claude-hud",
-    "lastUpdated": "2026-04-09T00:22:03.322Z"
+    "lastUpdated": "2026-04-13T15:43:09.974Z"
+  },
+  "caveman": {
+    "source": {
+      "source": "github",
+      "repo": "JuliusBrussee/caveman"
+    },
+    "installLocation": "/home/.claude/plugins/marketplaces/caveman",
+    "lastUpdated": "2026-04-13T14:44:44.190Z"
   }
 }
