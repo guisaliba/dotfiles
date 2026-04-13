@@ -29,16 +29,12 @@ for item in $CONFIG_ITEMS; do
     fi
 done
 
-AGENTS_SRC="$HOME/dotfiles/AGENTS.md"
-AGENTS_DEST="$CLAUDE_DIR/CLAUDE.md"
+SYNC_AGENTS="$HOME/dotfiles/agents/sync-agents.sh"
 
-if [ -e "$AGENTS_SRC" ]; then
-    [ -L "$AGENTS_DEST" ] && rm "$AGENTS_DEST"
-    [ -e "$AGENTS_DEST" ] && mv "$AGENTS_DEST" "$AGENTS_DEST.bak.$(date +%s)"
-    ln -s "$AGENTS_SRC" "$AGENTS_DEST"
-    echo "  Linked: CLAUDE.md -> AGENTS.md"
+if [ -x "$SYNC_AGENTS" ]; then
+    "$SYNC_AGENTS"
 else
-    echo "  Skipped (not found): AGENTS.md"
+    echo "  Skipped (not found or not executable): $SYNC_AGENTS"
 fi
 
 echo ""
