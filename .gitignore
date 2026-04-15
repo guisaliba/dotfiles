@@ -5,4 +5,7 @@
 
 backups/
 
+# IDEs
+.vscode/
+
 # App-specific ignores live in per-directory .gitignore files
