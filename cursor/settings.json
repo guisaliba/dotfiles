@@ -36,7 +36,7 @@
 		"gitDecoration.addedResourceForeground": "#7fd27fd9",
 		"gitDecoration.renamedResourceForeground": "#74aeec",
 		"gitDecoration.untrackedResourceForeground": "#f7aeae",
-		"gitDecoration.ignoredResourceForeground": "#ffffff3b",
+		"gitDecoration.ignoredResourceForeground": "#ffffff3b"
 	},
 	"editor.tabSize": 2,
 	"editor.fontFamily": "JetBrains Mono, Cascadia Code, Fira Code, monospace",
@@ -53,7 +53,7 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": "explicit",
 		"source.organizeImports": "always",
-		"source.fixAll.editorconfig": "always",
+		"source.fixAll.editorconfig": "always"
 	},
 	"editor.pasteAs.preferences": ["chat.attach.attachments"],
 	"editor.smoothScrolling": true,
@@ -97,7 +97,7 @@
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.patterns": {
 		"package.json": ".eslint*, prettier*, tsconfig*, vite*, pnpm-lock*, package-lock*, bun.lockb",
-		"tailwind.config*": "tailwind.config*, postcss.config*",
+		"tailwind.config*": "tailwind.config*, postcss.config*"
 	},
 	"eslint.codeActionsOnSave.mode": "all",
 	"eslint.format.enable": true,
@@ -111,7 +111,7 @@
 		"json",
 		"jsonc",
 		"yaml",
-		"github-actions-workflow",
+		"github-actions-workflow"
 	],
 	"eslint.validate": [
 		"javascript",
@@ -121,7 +121,7 @@
 		"json",
 		"jsonc",
 		"yaml",
-		"github-actions-workflow",
+		"github-actions-workflow"
 	],
 	"terminal.integrated.fontFamily": "JetBrains Mono Nerd Font",
 	"terminal.integrated.lineHeight": 1.4,
@@ -135,17 +135,17 @@
 	"emmet.triggerExpansionOnTab": true,
 	"emmet.showExpandedAbbreviation": "inMarkupAndStylesheetFilesOnly",
 	"emmet.syntaxProfiles": {
-		"javascript": "jsx",
+		"javascript": "jsx"
 	},
 	"emmet.includeLanguages": {
 		"javascript": "javascriptreact",
 		"typescript": "typescriptreact",
 		"postcss": "css",
-		"razor": "html",
+		"razor": "html"
 	},
 	"files.autoSaveWorkspaceFilesOnly": true,
 	"files.associations": {
-		"*.jsx": "javascriptreact",
+		"*.jsx": "javascriptreact"
 	},
 	"prettier.semi": true,
 	"prettier.printWidth": 80,
@@ -156,47 +156,47 @@
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
 		"editor.wordWrapColumn": 50,
-		"diffEditor.ignoreTrimWhitespace": false,
+		"diffEditor.ignoreTrimWhitespace": false
 	},
 	"[css]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.suggest.showVariables": true,
+		"editor.suggest.showVariables": true
 	},
 	"[html]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[json]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescript]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[javascriptreact]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescriptreact]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[javascript]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[java]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[dockercompose]": {
 		"editor.insertSpaces": true,
@@ -205,45 +205,45 @@
 		"editor.quickSuggestions": {
 			"other": true,
 			"comments": false,
-			"strings": true,
+			"strings": true
 		},
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "redhat.vscode-yaml",
+		"editor.defaultFormatter": "redhat.vscode-yaml"
 	},
 	"[github-actions-workflow]": {
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "redhat.vscode-yaml",
+		"editor.defaultFormatter": "redhat.vscode-yaml"
 	},
 	"[jsonc]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[svelte]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[xml]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "esbenp.prettier-vscode",
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[prisma]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "Prisma.prisma",
+		"editor.defaultFormatter": "Prisma.prisma"
 	},
 	"[python]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"diffEditor.ignoreTrimWhitespace": false,
+		"diffEditor.ignoreTrimWhitespace": false
 	},
 	"[liquid]": {
 		"editor.formatOnPaste": true,
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "Shopify.theme-check-vscode",
+		"editor.defaultFormatter": "Shopify.theme-check-vscode"
 	},
 	"security.workspace.trust.enabled": false,
 	"http.systemCertificates": false,
@@ -280,7 +280,7 @@
 		"contributors": true,
 		"repositories": false,
 		"searchAndCompare": false,
-		"launchpad": false,
+		"launchpad": false
 	},
 	"docker.extension.enableComposeLanguageServer": true,
 	"docker.extension.dockerEngineAvailabilityPrompt": false,
@@ -302,11 +302,13 @@
 		"ruby",
 		"shellscript",
 		"yaml",
-		"yml",
+		"yml"
 	],
 	"redhat.telemetry.enabled": false,
 	"cursor.cpp.disabledLanguages": ["plaintext", "scminput"],
 	"workbench.layoutControl.enabled": false,
 	"window.menuBarVisibility": "compact",
 	"cursor.general.emailPrivacyEnabled": true,
+	"python.defaultInterpreterPath": "/bin/python",
+	"cursorpyright.analysis.typeCheckingMode": "basic"
 }
