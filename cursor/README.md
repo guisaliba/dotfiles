@@ -13,7 +13,7 @@ After editing `**agents/AGENTS.base.md`** or `**agents/cursor.overlay.md**`, reg
 That writes:
 
 - `**~/.cursor/rules/00-global.mdc**` - base + cursor overlay (`alwaysApply: true`)
-- `**~/.cursor/rules/10-caveman.mdc**` - Caveman mode rule (`alwaysApply: true`)
+- `**~/.cursor/rules/01-caveman.mdc**` - Caveman mode rule (`alwaysApply: true`)
 
 Both files are regular (non-symlink) files; edits to the generated files are overwritten on the next sync. Change behavior at the source in `agents/`.
 
