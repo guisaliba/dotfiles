@@ -1,27 +1,25 @@
-<samp>
-  <h1 align="center">
-    Dotfiles
-  </h1>
+# Dotfiles
 
-## Description
+Personal dotfiles for my current Linux workflow.
 
-My dotfiles. The "arch" folder contains my dotfiles to setup an Arch Linux build from scratch
-with i3. The rest is everything I use (or used once) on a daily basis across my machines.
+## Target setup
 
-## Technologies
+- OS: Omarchy
+- Shell: Bash
+- Terminal: Ghostty
+- Prompt: Starship
+- Editor: Cursor and VSCode
+- Agents: OpenCode, Codex, Cursor, Claude Code
 
-This project was built using:
+## Philosophy
 
-- bash
-- fish
-- Markdown
+This repository is a living setup, not an archive of old desktop environments or one-off experiments.
 
 ## Usage
 
-You are free to use this repository as you wish. To clone the repository, run the following command:
+Clone the repository:
 
+```bash
+git clone https://github.com/guisaliba/dotfiles.git ~/dotfiles
 ```
-git clone https://github.com/guisaliba/dotfiles.git
-```
-
-</samp>
+Apply files selectively. Do not blindly overwrite configuration.
