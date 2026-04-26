@@ -1,43 +1,23 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
+# ~/.bashrc: executed by bash(1) for non-login interactive shells.
 
-# Exit if not running interactively
 case $- in
-    *i*) ;;
-      *) return;;
+  *i*) ;;
+  *) return ;;
 esac
 
-# History behavior
-HISTCONTROL=ignoreboth  # ignore duplicates and lines starting with space
-shopt -s histappend     # append to history file instead of overwriting
-HISTSIZE=1000
-HISTFILESIZE=2000
+# Omarchy defaults
+if [ -f "$HOME/.local/share/omarchy/default/bash/rc" ]; then
+  source "$HOME/.local/share/omarchy/default/bash/rc"
+fi
 
-# Adjust LINES and COLUMNS after resizing terminal window
+# History
+HISTCONTROL=ignoreboth
+shopt -s histappend
+HISTSIZE=10000
+HISTFILESIZE=20000
+
+# Keep terminal dimensions current after resize
 shopt -s checkwinsize
-
-# Lesspipe for friendlier viewing of non-text files
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# Enable color prompt if terminal supports it
-if [ -x /usr/bin/tput ] && tput setaf 1 &>/dev/null; then
-    PS1='\[\033[01;34m\]\u@\h\[\033[00m\]:\[\033[01;35m\]\w\[\033[00m\]\$ '
-else
-    PS1='\u@\h:\w\$ '
-fi
-
-# Enable ls and grep color support + load dircolors
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
-
-# Load custom aliases if present
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
 
 # Bash completion
 if ! shopt -oq posix; then
@@ -48,6 +28,83 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Starship prompt
-export STARSHIP_CONFIG=~/.config/starship.toml
-eval "$(starship init bash)"
+# Personal PATH
+export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+
+# pnpm, only if present
+if [ -d "$HOME/.local/share/pnpm" ]; then
+  export PNPM_HOME="$HOME/.local/share/pnpm"
+  case ":$PATH:" in
+    *":$PNPM_HOME:"*) ;;
+    *) export PATH="$PNPM_HOME:$PATH" ;;
+  esac
+fi
+
+# Bun, only if present
+[ -d "$HOME/.bun/bin" ] && export PATH="$HOME/.bun/bin:$PATH"
+
+# Starship
+export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init bash)"
+fi
+
+# Personal aliases
+alias py='python3'
+alias lg='lazygit'
+
+# Open Obsidian vault
+notes() {
+  cd "$HOME/projects/brain" && obsidian .
+}
+
+# Claude Code helpers
+__cc_session_name() {
+  local folder project_root status purpose
+  folder="$(basename "$PWD")"
+  project_root="$(dirname "$PWD")"
+  status="active"
+
+  case "$project_root" in
+    "$HOME/projects/inactive"*) status="inactive" ;;
+  esac
+
+  read -r -p "Session purpose for '$folder' (default: $folder [$status])? " purpose
+  [ -z "$purpose" ] && purpose="$folder"
+
+  printf '%s | %s [%s]\n' "$purpose" "$folder" "$status"
+}
+
+cc-cloud() {
+  if [ "$#" -eq 0 ]; then
+    echo 'usage: cc-cloud "Task description"'
+    return 1
+  fi
+
+  local session_name
+  session_name="$(__cc_session_name)"
+  echo "Starting cloud session: $session_name"
+  claude --remote --name "$session_name" "$@"
+}
+
+cc-rc() {
+  local session_name
+  session_name="$(__cc_session_name)"
+  echo "Starting/attaching Remote Control: $session_name"
+  claude remote-control --name "$session_name"
+}
+
+cc-tp() {
+  if [ "$#" -eq 0 ]; then
+    echo "usage: cc-tp <session-id-or-name>"
+    return 1
+  fi
+
+  echo "Teleporting session '$1' to local..."
+  claude --teleport "$1"
+}
+
+cc-ls() {
+  echo "Local sessions in $PWD:"
+  claude --resume
+}
