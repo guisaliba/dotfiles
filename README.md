@@ -4,11 +4,11 @@ Personal dotfiles for my current Linux workflow.
 
 ## Target setup
 
-- OS: Omarchy
+- OS: Omarchy 3.6
 - Shell: Bash
 - Terminal: Ghostty
 - Prompt: Starship
-- Editor: Cursor and VSCode
+- Editor: Cursor, VSCode
 - Agents: OpenCode, Codex, Cursor, Claude Code
 
 ## Philosophy
