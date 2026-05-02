@@ -4,7 +4,7 @@ Personal dotfiles for my current Linux workflow.
 
 ## Target setup
 
-- OS: Omarchy 3.6
+- OS: Omarchy 3.6 (and WSL2 on Windows)
 - Shell: Bash
 - Terminal: Ghostty
 - Prompt: Starship
