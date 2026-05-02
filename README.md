@@ -8,8 +8,8 @@ Personal dotfiles for my current Linux workflow.
 - Shell: Bash
 - Terminal: Ghostty
 - Prompt: Starship
-- Editor: Cursor, VSCode
-- Agents: OpenCode, Codex, Cursor, Claude Code
+- Editor: VSCode, Zed (trying on)
+- Agents: Pi, OpenCode, Codex
 
 ## Philosophy
 
