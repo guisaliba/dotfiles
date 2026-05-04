@@ -134,7 +134,6 @@ backup_existing_targets() {
   for p in \
     "$HOME/.codex/AGENTS.md" \
     "$HOME/.config/opencode/AGENTS.md" \
-    "$HOME/.opencode/AGENTS.md" \
     "$HOME/.pi/agent/AGENTS.md" \
     "$HOME/.pi/agent/settings.json"
   do
@@ -298,10 +297,6 @@ EOF
 {{ include ".chezmoitemplates/agents/AGENTS.md" }}
 EOF
 
-  write_file "$CHEZMOI_SRC/dot_opencode/AGENTS.md.tmpl" <<'EOF'
-{{ include ".chezmoitemplates/agents/AGENTS.md" }}
-EOF
-
   write_file "$CHEZMOI_SRC/dot_pi/agent/AGENTS.md.tmpl" <<'EOF'
 {{ include ".chezmoitemplates/agents/AGENTS.md" }}
 EOF
@@ -310,11 +305,10 @@ EOF
 materialize_agent_targets() {
   log "Materializing AGENTS.md into global harness locations"
 
-  mkdir -p "$HOME/.codex" "$HOME/.config/opencode" "$HOME/.opencode" "$HOME/.pi/agent"
+  mkdir -p "$HOME/.codex" "$HOME/.config/opencode" "$HOME/.pi/agent"
 
   copy_file_replace_symlink "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.codex/AGENTS.md"
   copy_file_replace_symlink "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
-  copy_file_replace_symlink "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.opencode/AGENTS.md"
   copy_file_replace_symlink "$DOTFILES_DIR/agents/AGENTS.md" "$HOME/.pi/agent/AGENTS.md"
 }
 
@@ -417,10 +411,8 @@ install_external_tools() {
     rtk init -g --opencode || warn "rtk opencode init failed"
 
     if [[ -f "$HOME/.config/opencode/plugins/rtk.ts" ]]; then
-      mkdir -p "$HOME/.opencode/plugins" "$CHEZMOI_SRC/dot_config/opencode/plugins" "$CHEZMOI_SRC/dot_opencode/plugins"
-      cp "$HOME/.config/opencode/plugins/rtk.ts" "$HOME/.opencode/plugins/rtk.ts"
+      mkdir -p "$CHEZMOI_SRC/dot_config/opencode/plugins"
       cp "$HOME/.config/opencode/plugins/rtk.ts" "$CHEZMOI_SRC/dot_config/opencode/plugins/rtk.ts"
-      cp "$HOME/.config/opencode/plugins/rtk.ts" "$CHEZMOI_SRC/dot_opencode/plugins/rtk.ts"
     fi
 
     rtk gain || true
@@ -689,7 +681,6 @@ The bootstrap writes or manages:
 
 - `~/.codex/AGENTS.md`
 - `~/.config/opencode/AGENTS.md`
-- `~/.opencode/AGENTS.md`
 - `~/.pi/agent/AGENTS.md`
 - `~/.agents/skills/`
 - `~/.pi/agent/extensions/rtk/`
@@ -771,14 +762,14 @@ write_file "$DOTFILES_DIR/agents/opencode/README.md" <<'EOF'
 
 OpenCode uses:
 
-* global instructions: `~/.config/opencode/AGENTS.md` and `~/.opencode/AGENTS.md`
+* global instructions: `~/.config/opencode/AGENTS.md`
 * shared skills: `~/.agents/skills`
 
 Managed integrations:
 
-* caveman via `npx skills add JuliusBrussee/caveman -a opencode`
+* caveman via `npx skills add JuliusBrussee/caveman -g -a opencode -s caveman -y --copy`
 * cavemem via `cavemem install --ide opencode`
-* rtk via `rtk init -g --agent opencode`
+* rtk via `rtk init -g --opencode`
 
 OpenCode should follow the shared workflow in `agents/AGENTS.md`: clarify, plan, use TDD, verify, commit atomically when asked.
 EOF
@@ -873,7 +864,7 @@ Context:
 * The old base-plus-overlay merge model should be considered deprecated.
 * Chezmoi source lives under ./chezmoi to avoid treating the whole repo root as chezmoi source.
 * Codex target: ~/.codex/AGENTS.md
-* OpenCode targets: ~/.config/opencode/AGENTS.md and ~/.opencode/AGENTS.md
+* OpenCode target: ~/.config/opencode/AGENTS.md
 * Pi target: ~/.pi/agent/AGENTS.md
 * Shared skills target: ~/.agents/skills
 * Required skills: grill-me, grill-with-docs, tdd.
@@ -901,7 +892,7 @@ git_commit_and_push() {
   log "Git status"
   git status --short
 
-  git add .gitignore README.md agents chezmoi bootstrap-agent-stack.sh
+  git add .gitignore README.md agents codex opencode chezmoi bootstrap-agent-stack.sh
 
   if git diff --cached --quiet; then
     log "No git changes to commit"

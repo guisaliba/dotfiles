@@ -24,7 +24,6 @@ The bootstrap writes or manages:
 
 - `~/.codex/AGENTS.md`
 - `~/.config/opencode/AGENTS.md`
-- `~/.opencode/AGENTS.md`
 - `~/.pi/agent/AGENTS.md`
 - `~/.agents/skills/`
 - `~/.pi/agent/extensions/rtk/`
