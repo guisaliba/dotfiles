@@ -7,7 +7,8 @@
     "git:github.com/v2nic/pi-caveman"
   ],
   "skills": [
-    "~/.agents/skills"
+    "~/.agents/skills",
+    "~/.pi/agent/skills"
   ],
   "extensions": [
     "~/.pi/agent/extensions/rtk",
