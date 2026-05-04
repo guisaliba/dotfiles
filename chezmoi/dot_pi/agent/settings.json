@@ -1,0 +1,16 @@
+{
+  "lastChangelogVersion": "0.72.1",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.5",
+  "defaultThinkingLevel": "high",
+  "packages": [
+    "git:github.com/v2nic/pi-caveman"
+  ],
+  "skills": [
+    "~/.agents/skills"
+  ],
+  "extensions": [
+    "~/.pi/agent/extensions/rtk",
+    "~/.pi/agent/extensions/cavemem-bridge"
+  ]
+}

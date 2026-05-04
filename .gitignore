@@ -4,6 +4,7 @@
 *.bak
 
 backups/
+.agent-stack-backup/
 
 # IDEs
 .vscode/
