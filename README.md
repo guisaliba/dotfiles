@@ -20,36 +20,51 @@ The current architecture uses:
 
 ## Managed global targets
 
-The bootstrap writes or manages:
+The agent stack applier writes or manages:
 
 - `~/.codex/AGENTS.md`
+- `~/.codex/config.toml`
 - `~/.config/opencode/AGENTS.md`
 - `~/.pi/agent/AGENTS.md`
 - `~/.agents/skills/`
 - `~/.pi/agent/extensions/rtk/`
 - `~/.pi/agent/extensions/cavemem-bridge/`
 
-## Bootstrap
+It also backs up and removes known deprecated agent targets, including stale `~/.opencode/AGENTS.md` and symlinks from the removed root `opencode/` workflow.
 
-Run:
+## Apply agent stack
 
-```sh
-./bootstrap-agent-stack.sh
-```
-
-Optional:
+Run from the repo root:
 
 ```sh
-RUN_AGENT_DOCS=0 ./bootstrap-agent-stack.sh
-PUSH=1 ./bootstrap-agent-stack.sh
-DOTFILES_DIR="$HOME/dotfiles" ./bootstrap-agent-stack.sh
+./agents/apply-agent-stack.sh
 ```
+
+The script can also be run directly from `agents/`:
+
+```sh
+cd agents
+./apply-agent-stack.sh
+```
+
+Useful options:
+
+```sh
+RUN_AGENT_DOCS=1 ./agents/apply-agent-stack.sh
+COMMIT=1 ./agents/apply-agent-stack.sh
+COMMIT=1 PUSH=1 ./agents/apply-agent-stack.sh
+DOTFILES_DIR="$HOME/dotfiles" ./agents/apply-agent-stack.sh
+```
+
+Defaults are safe for another machine: no nested Pi review, no commit, no push, no branch creation.
 
 ## Design
 
 The repo avoids custom Markdown merge scripts. The old base-plus-overlay model was replaced with one canonical instruction file and harness-specific placement.
 
 Chezmoi is used as the durable multi-machine materialization layer. Scripts are limited to installing external tools and creating bridge files that cannot be represented as static config alone.
+
+Edit `agents/AGENTS.md` for global instruction changes. The applier copies it into `chezmoi/.chezmoitemplates/agents/AGENTS.md` and materializes the target files.
 
 ## Memory
 

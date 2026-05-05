@@ -1,30 +1,33 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# bootstrap-agent-stack.sh
+# apply-agent-stack.sh
 #
 # Usage:
-#   chmod +x bootstrap-agent-stack.sh
-#   ./bootstrap-agent-stack.sh
+#   ./agents/apply-agent-stack.sh
 #
 # Optional:
-#   DOTFILES_DIR="$HOME/dotfiles" ./bootstrap-agent-stack.sh
-#   RUN_AGENT_DOCS=0 ./bootstrap-agent-stack.sh
-#   PUSH=1 ./bootstrap-agent-stack.sh
-#   BRANCH=chore/agent-stack ./bootstrap-agent-stack.sh
+#   DOTFILES_DIR="$HOME/dotfiles" ./agents/apply-agent-stack.sh
+#   RUN_AGENT_DOCS=1 ./agents/apply-agent-stack.sh
+#   COMMIT=1 ./agents/apply-agent-stack.sh
+#   COMMIT=1 PUSH=1 ./agents/apply-agent-stack.sh
+#   COMMIT=1 CREATE_BRANCH=1 BRANCH=chore/agent-stack ./agents/apply-agent-stack.sh
 #
 # Defaults:
-#   - writes changes locally
-#   - creates/updates deterministic docs
-#   - invokes Pi if available to review docs/extension
-#   - does NOT push unless PUSH=1
+#   - uses this script's repo checkout as DOTFILES_DIR
+#   - writes and applies managed agent configuration locally
+#   - skips nested Pi review unless RUN_AGENT_DOCS=1
+#   - does NOT commit unless COMMIT=1
+#   - does NOT push unless COMMIT=1 PUSH=1
 
-DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 CHEZMOI_SRC="${CHEZMOI_SRC:-$DOTFILES_DIR/chezmoi}"
 BRANCH="${BRANCH:-chore/agent-stack-chezmoi}"
-RUN_AGENT_DOCS="${RUN_AGENT_DOCS:-1}"
+RUN_AGENT_DOCS="${RUN_AGENT_DOCS:-0}"
+COMMIT="${COMMIT:-0}"
 PUSH="${PUSH:-0}"
-CREATE_BRANCH="${CREATE_BRANCH:-1}"
+CREATE_BRANCH="${CREATE_BRANCH:-0}"
 RTK_VERSION="${RTK_VERSION:-v0.38.0}"
 
 log() {
@@ -117,7 +120,7 @@ require_repo() {
 setup_branch() {
   cd "$DOTFILES_DIR"
 
-  if [[ "$CREATE_BRANCH" != "1" ]]; then
+  if [[ "$COMMIT" != "1" || "$CREATE_BRANCH" != "1" ]]; then
     return
   fi
 
@@ -125,6 +128,16 @@ setup_branch() {
     git switch "$BRANCH" || warn "Could not switch to existing branch $BRANCH. Continuing on current branch."
   else
     git switch -c "$BRANCH" || warn "Could not create branch $BRANCH. Continuing on current branch."
+  fi
+}
+
+backup_path_if_present() {
+  local path="$1"
+  local backup="$2"
+
+  if [[ -e "$path" || -L "$path" ]]; then
+    mkdir -p "$backup/$(dirname "${path#$HOME/}")"
+    cp -a "$path" "$backup/${path#$HOME/}"
   fi
 }
 
@@ -137,17 +150,46 @@ backup_existing_targets() {
 
   for p in \
     "$HOME/.codex/AGENTS.md" \
+    "$HOME/.codex/config.toml" \
     "$HOME/.config/opencode/AGENTS.md" \
+    "$HOME/.config/opencode/.gitignore" \
+    "$HOME/.config/opencode/bun.lock" \
+    "$HOME/.config/opencode/package.json" \
+    "$HOME/.opencode/AGENTS.md" \
+    "$HOME/.opencode/plugins/rtk.ts" \
     "$HOME/.pi/agent/AGENTS.md" \
     "$HOME/.pi/agent/settings.json"
   do
-    if [[ -e "$p" || -L "$p" ]]; then
-      mkdir -p "$backup/$(dirname "${p#$HOME/}")"
-      cp -a "$p" "$backup/${p#$HOME/}"
-    fi
+    backup_path_if_present "$p" "$backup"
   done
 
   log "Backed up existing agent targets to $backup"
+}
+
+remove_if_legacy_opencode_repo_link() {
+  local path="$1"
+
+  if [[ -L "$path" ]]; then
+    local target
+    target="$(readlink "$path")"
+    if [[ "$target" == "$DOTFILES_DIR/opencode/"* || "$target" == "$DOTFILES_DIR/AGENTS.md" ]]; then
+      rm -f "$path"
+      log "Removed deprecated OpenCode symlink: $path -> $target"
+    fi
+  fi
+}
+
+cleanup_deprecated_targets() {
+  log "Cleaning deprecated agent targets"
+
+  rm -f "$HOME/.opencode/AGENTS.md" "$HOME/.opencode/plugins/rtk.ts"
+  rmdir "$HOME/.opencode/plugins" 2>/dev/null || true
+
+  remove_if_legacy_opencode_repo_link "$HOME/.config/opencode/.gitignore"
+  remove_if_legacy_opencode_repo_link "$HOME/.config/opencode/bun.lock"
+  remove_if_legacy_opencode_repo_link "$HOME/.config/opencode/package.json"
+
+  find "$HOME/.codex" "$HOME/.config/opencode" "$HOME/.pi/agent" -xtype l -print -delete 2>/dev/null || true
 }
 
 sync_canonical_agents_md() {
@@ -480,6 +522,11 @@ git_commit_and_push() {
   log "Git status"
   git status --short
 
+  if [[ "$COMMIT" != "1" ]]; then
+    log "Skipping commit. Re-run with COMMIT=1 to commit repository changes."
+    return
+  fi
+
   git add -A -- .
 
   if git diff --cached --quiet; then
@@ -487,12 +534,12 @@ git_commit_and_push() {
     return
   fi
 
-  git commit -m "chore(agent-stack): simplify global agent configuration" || warn "git commit failed"
+  git commit -m "chore(agent-stack): apply managed agent configuration" || warn "git commit failed"
 
   if [[ "$PUSH" == "1" ]]; then
     git push -u origin "$(git branch --show-current)" || warn "git push failed"
   else
-    log "Skipping push. Re-run with PUSH=1 to push the branch."
+    log "Skipping push. Re-run with COMMIT=1 PUSH=1 to push the branch."
   fi
 }
 
@@ -500,6 +547,7 @@ main() {
   require_repo
   setup_branch
   backup_existing_targets
+  cleanup_deprecated_targets
 
   sync_canonical_agents_md
   write_chezmoi_source
