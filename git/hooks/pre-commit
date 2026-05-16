@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+set -eu
+
+# dotfiles repo only: prevent committing local trusted project paths in managed agent configs.
+
+files="
+agents/codex/config.toml
+chezmoi/dot_codex/config.toml
+"
+
+failed=0
+
+for file in $files; do
+  if git diff --cached -- "$file" | grep -E '^\+.*\[projects' >/dev/null 2>&1; then
+    printf '%s\n' "Refusing commit: trusted project config found in $file" >&2
+    failed=1
+  fi
+done
+
+if [ "$failed" -ne 0 ]; then
+  printf '%s\n' "Remove [projects.*] entries from managed agent configs before committing." >&2
+  exit 1
+fi

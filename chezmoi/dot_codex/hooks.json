@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'CAVEMAN ULTRA MODE ACTIVE. Rules: Bare fragments. Drop articles/filler/pleasantries/hedging/connective prose. Abbrev common prose words: DB/auth/config/req/res/fn/impl. Use arrows for causality. Prefer compact bullets/tables. Technical terms/code/paths/commands/errors exact. Code/commits/security: write normal. User says stop caveman or normal mode to deactivate.'",
+            "timeout": 5,
+            "statusMessage": "Loading caveman ultra mode"
+          }
+        ]
+      }
+    ]
+  }
+}
