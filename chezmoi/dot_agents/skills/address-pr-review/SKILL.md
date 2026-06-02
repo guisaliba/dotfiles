@@ -6,8 +6,8 @@ argument-hint: "PR number or URL (optional; defaults to the current branch's PR)
 
 # Address PR Review
 
-A loop for the post-open review phase of a pull request: a reviewer (GitHub
-Copilot, a teammate, or both) leaves comments on the open PR; you triage them
+A loop for the post-open review phase of a pull request: a reviewer (an AI assistant,
+a teammate, or both) leaves comments on the open PR; you triage them
 honestly, fix the valid ones, close the loop on every thread, and ask for a
 re-review. The point is **judgment plus follow-through** — not blindly applying
 every suggestion, and not leaving threads dangling.
