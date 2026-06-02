@@ -1,6 +1,7 @@
 # Projects
 
-Directory tree for `active/` and `inactive/`, stopping at initialized Git repositories. Directories under `inactive/puc/2025/` are also stop points.
+Directory tree for `active/` and `inactive/`, stopping at initialized Git repositories. 
+Directories under `inactive/puc/2025/` are also stop points. This mirrors from May 2026.
 
 ## `active/`
 ```text
