@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "cavemem": {
+      "command": "cavemem",
+      "args": [
+        "mcp"
+      ]
+    }
+  }
+}
