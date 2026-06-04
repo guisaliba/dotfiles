@@ -42,10 +42,16 @@ Current architecture:
 - managed targets:
   - `~/.codex/AGENTS.md`
   - `~/.codex/config.toml`
+  - `~/.codex/config.json`
+  - `~/.codex/hooks.json`
+  - `~/.codex/skills/`
   - `~/.config/opencode/AGENTS.md`
+  - `~/.config/opencode/opencode.json`
+  - `~/.config/opencode/commands/`
   - `~/.pi/agent/AGENTS.md`
-  - `~/.agents/skills/`
+  - `~/.pi/agent/settings.json`
   - `~/.pi/agent/extensions/`
+  - `~/.agents/skills/`
 
 Apply the agent stack:
 
@@ -53,7 +59,9 @@ Apply the agent stack:
 ./agents/apply-agent-stack.sh
 ```
 
-The applier backs up known managed targets, removes deprecated agent symlinks/files, applies chezmoi, and installs supported integrations for caveman, cavemem, and rtk.
+The applier backs up known managed targets, removes deprecated agent symlinks/files, applies chezmoi, and installs supported integrations for caveman, cavemem, rtk, and plannotator.
+
+Plannotator binary is installed automatically only when missing. Pin a version with `PLANNOTATOR_VERSION=vX.Y.Z`.
 
 Defaults are local-only: no nested Pi review, no commit, no push. Use `COMMIT=1` or `COMMIT=1 PUSH=1` explicitly when needed.
 
