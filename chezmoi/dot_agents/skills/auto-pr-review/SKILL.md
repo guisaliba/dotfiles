@@ -1,5 +1,5 @@
 ---
-name: address-pr-review
+name: auto-pr-review
 description: Work through reviewer comments on an already-opened pull request. Read every review comment (e.g. from GitHub Copilot or a human reviewer), judge each one against the codebase and the project's own docs/conventions, implement the valid ones as atomic commits, reply to each thread citing the fix commit (or a rejection rationale), resolve the threads, then @-mention the reviewer to request another pass. Use when the user says things like "address the PR review comments", "resolve Copilot's comments", "go through the review feedback on the PR", or "iterate on the opened PR".
 argument-hint: "PR number or URL (optional; defaults to the current branch's PR)"
 ---
