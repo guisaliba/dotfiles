@@ -4,7 +4,11 @@
   "defaultModel": "gpt-5.5",
   "defaultThinkingLevel": "high",
   "packages": [
-    "git:github.com/v2nic/pi-caveman"
+    "git:github.com/v2nic/pi-caveman",
+    {
+      "source": "npm:@plannotator/pi-extension",
+      "skills": []
+    }
   ],
   "skills": [
     "~/.agents/skills",
