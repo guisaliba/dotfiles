@@ -6,7 +6,7 @@ This repository is my portable workstation setup. It tracks shell, editor, termi
 
 ## Target setup
 
-- OS: Omarchy / Arch Linux, plus WSL2 when needed
+- OS: Omarchy + WSL2
 - Shell: Bash
 - Terminal: Ghostty
 - Prompt: Starship
@@ -29,41 +29,6 @@ cd ~/dotfiles
 ```
 
 Apply files selectively. Do not blindly overwrite configuration unless the target is documented as managed.
-
-## Agent stack
-
-The coding-agent setup is managed from `agents/` and materialized through `chezmoi/`.
-
-Current architecture:
-
-- canonical global instructions: `agents/AGENTS.md`
-- shared skills source: `chezmoi/dot_agents/skills/`
-- chezmoi source tree: `chezmoi/`
-- managed targets:
-  - `~/.codex/AGENTS.md`
-  - `~/.codex/config.toml`
-  - `~/.codex/config.json`
-  - `~/.codex/hooks.json`
-  - `~/.codex/skills/`
-  - `~/.config/opencode/AGENTS.md`
-  - `~/.config/opencode/opencode.json`
-  - `~/.config/opencode/commands/`
-  - `~/.pi/agent/AGENTS.md`
-  - `~/.pi/agent/settings.json`
-  - `~/.pi/agent/extensions/`
-  - `~/.agents/skills/`
-
-Apply the agent stack:
-
-```sh
-./agents/apply-agent-stack.sh
-```
-
-The applier backs up known managed targets, removes deprecated agent symlinks/files, applies chezmoi, and installs supported integrations for caveman, cavemem, rtk, and plannotator.
-
-Plannotator binary is installed automatically only when missing. Pin a version with `PLANNOTATOR_VERSION=vX.Y.Z`.
-
-Defaults are local-only: no nested Pi review, no commit, no push. Use `COMMIT=1` or `COMMIT=1 PUSH=1` explicitly when needed.
 
 ## License
 
