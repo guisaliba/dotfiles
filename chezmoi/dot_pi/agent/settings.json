@@ -4,7 +4,6 @@
   "defaultModel": "gpt-5.5",
   "defaultThinkingLevel": "high",
   "packages": [
-    "git:github.com/v2nic/pi-caveman",
     {
       "source": "npm:@plannotator/pi-extension",
       "skills": []
@@ -15,8 +14,6 @@
     "~/.pi/agent/skills"
   ],
   "extensions": [
-    "~/.pi/agent/extensions/caveman-autostart",
-    "~/.pi/agent/extensions/rtk",
-    "~/.pi/agent/extensions/cavemem-bridge"
+    "~/.pi/agent/extensions/rtk"
   ]
 }

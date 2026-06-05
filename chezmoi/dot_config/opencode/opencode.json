@@ -2,26 +2,6 @@
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
   "plugin": [
-    "./plugins/caveman/plugin.js",
     "@plannotator/opencode@latest"
-  ],
-  "mcp": {
-    "caveman-shrink": {
-      "type": "local",
-      "command": [
-        "npx",
-        "-y",
-        "caveman-shrink"
-      ],
-      "enabled": true
-    },
-    "cavemem": {
-      "type": "local",
-      "command": [
-        "cavemem",
-        "mcp"
-      ],
-      "enabled": true
-    }
-  }
+  ]
 }
