@@ -1,0 +1,43 @@
+{
+	"$schema": "https://json.schemastore.org/claude-code-settings.json",
+	"hooks": {
+		"SessionStart": [
+			{
+				"matcher": "startup|resume",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "bash $HOME/.agents/bin/ensure-agent-stack.sh session-start claude-json",
+						"timeout": 10,
+						"statusMessage": "Loading shared agent stack"
+					}
+				]
+			}
+		],
+		"UserPromptSubmit": [
+			{
+				"hooks": [
+					{
+						"type": "command",
+						"command": "bash $HOME/.agents/bin/ensure-agent-stack.sh prompt claude-json",
+						"timeout": 5,
+						"statusMessage": "Reinforcing shared agent stack"
+					}
+				]
+			}
+		],
+		"PreToolUse": [
+			{
+				"matcher": "Bash",
+				"hooks": [
+					{
+						"type": "command",
+						"command": "rtk hook claude",
+						"timeout": 30,
+						"statusMessage": "Applying rtk command rewrite"
+					}
+				]
+			}
+		]
+	}
+}

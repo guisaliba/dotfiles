@@ -139,7 +139,6 @@ Rules:
 These should be available in every coding-agent session when the harness supports them:
 
 - caveman for concise agent output.
-- cavemem for cross-session memory.
 - rtk for shell/tool safety and command rewriting.
 - grill-me for requirement discovery.
 - grill-with-docs for requirement discovery grounded in repo docs.
