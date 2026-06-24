@@ -40,17 +40,8 @@ redhat.java
 redhat.vscode-xml
 redhat.vscode-yaml
 ritwickdey.liveserver
-sonarsource.sonarlint-vscode
-stivo.tailwind-fold
 styled-components.vscode-styled-components
 tamasfe.even-better-toml
 usernamehw.errorlens
-vscjava.vscode-gradle
-vscjava.vscode-java-debug
-vscjava.vscode-java-dependency
-vscjava.vscode-java-pack
-vscjava.vscode-java-test
-vscjava.vscode-maven
-vue.volar
 wix.vscode-import-cost
 yoavbls.pretty-ts-errors
