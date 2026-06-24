@@ -77,8 +77,7 @@ Rules of thumb:
 
 ## Step 3 — Implement the valid fixes
 
-- Follow the repo's commit/branch conventions (read `CLAUDE.md`/`AGENTS.md`/
-  `CONTRIBUTING`).
+- Follow the repo's commit/branch conventions (read `AGENTS.md`/`CONTRIBUTING`).
 - Add or adjust **tests** when a fix warrants it — a regression test that
   directly proves the reviewer's concern is the strongest reply.
 - **Verify**: run the test suite / build / typecheck. Don't reply "fixed" on red.

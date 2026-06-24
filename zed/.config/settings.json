@@ -132,11 +132,6 @@
         },
         {
           "paths": [
-            "/home/guisaliba/.claude"
-          ]
-        },
-        {
-          "paths": [
             "/home/guisaliba/.config"
           ]
         },
@@ -248,7 +243,7 @@
       "write": {
         "default_model": {
           "provider": "copilot_chat",
-          "model": "claude-sonnet-4.5",
+          "model": "gpt-5.2",
         },
         "name": "Write",
         "tools": {
@@ -275,30 +270,10 @@
     "dock": "right",
     "inline_assistant_model": {
       "provider": "copilot_chat",
-      "model": "claude-sonnet-4.5",
+      "model": "gpt-5.2",
     },
-    "inline_alternatives": [
-      {
-        "provider": "copilot_chat",
-        "model": "claude-sonnet-4.5",
-      },
-      {
-        "provider": "copilot_chat",
-        "model": "gpt-5.1-codex",
-      },
-    ],
+    "inline_alternatives": [],
     "model_parameters": [],
-  },
-  "agent_servers": {
-    "claude": {
-      // NOTE: Setting CLAUDE_CODE_EXECUTABLE here might not work (see https://github.com/zed-industries/zed/issues/40327)
-      // Workaround: Set as global environment variable instead and leave "env" empty
-      // - Add it to ~/dotfiles/fish/config.fish
-      // See ~/dotfiles/zed/docs/CLAUDE-CODE.md for details
-      "env": {
-        "CLAUDE_CODE_EXECUTABLE": "/home/guisaliba/.local/bin/claude",
-      },
-    },
   },
   "icon_theme": "Symbols Icon Theme",
   "terminal": {

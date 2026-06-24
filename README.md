@@ -11,7 +11,7 @@ This repository is my portable workstation setup. It tracks shell, editor, termi
 - Terminal: Ghostty
 - Prompt: Starship
 - Editors: VSCode, Zed
-- Agent harnesses: OpenCode, Pi, Claude Code
+- Agent harnesses: OpenCode, Pi
 
 ## Philosophy
 
