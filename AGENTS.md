@@ -16,33 +16,30 @@ It manages shell, editor, terminal, prompt, agent harness, and supporting develo
 - `vscode/`: VSCode configuration and extension notes.
 - `zed/`: Zed editor configuration.
 - `wallpapers/`: wallpaper assets.
-- `agents/`: shared coding-agent configuration and runtime wiring.
-- `chezmoi/`: chezmoi source tree used to materialize managed home-directory config.
+- `agents/`: OpenCode agent setup and runtime wiring.
 
 ## Agent Stack
 
-The managed agent stack lives under `agents/`.
+The agent stack lives under `agents/`.
 
-- `agents/AGENTS.md` is the canonical global instruction file shared by OpenCode and Pi.
-- `agents/apply-agent-stack.sh` applies the managed agent stack to the current machine.
-- `agents/test-agent-stack.sh` verifies deterministic harness wiring.
+- `agents/AGENTS.md` is the canonical global instruction file for OpenCode.
+- `agents/apply.sh` installs and configures OpenCode, RTK, Plannotator, and required skills.
+- `agents/test.sh` verifies deterministic harness wiring.
 - `agents/opencode/README.md` documents OpenCode targets and integrations.
-- `agents/pi/README.md` documents Pi targets and integrations.
-- `agents/skills/README.md` documents shared skill layout and managed skill payloads.
+- `agents/skills/README.md` documents skill layout and managed skill payloads.
 
 Root `AGENTS.md` is repo-local contributor guidance for coding agents working inside this dotfiles repo. It is not the runtime instruction payload for harnesses. The runtime payload is `agents/AGENTS.md`.
 
-## Chezmoi
+## Setup
 
-The chezmoi source tree is `chezmoi/`, not the repository root.
+From the repo root:
 
-Managed agent files are materialized through:
+```sh
+./agents/apply.sh
+./agents/test.sh
+```
 
-- `chezmoi/.chezmoitemplates/agents/AGENTS.md`
-- `chezmoi/dot_config/opencode/AGENTS.md.tmpl`
-- `chezmoi/dot_pi/agent/AGENTS.md.tmpl`
-
-Follow the repo policy: one source of truth, multiple placements.
+Skills are installed live from upstream sources. No skill payloads are vendored in this repo except `auto-pr-review`, which is a local-only manual skill.
 
 ## Working Rules
 
@@ -51,4 +48,4 @@ Follow the repo policy: one source of truth, multiple placements.
 - Do not broadly refactor dotfiles layout unless asked.
 - Do not change unrelated user configuration.
 - Preserve the distinction between repo documentation, managed source files, and materialized home-directory targets.
-- After agent-stack changes, run `./agents/test-agent-stack.sh` when practical.
+- After agent-stack changes, run `./agents/test.sh` when practical.
