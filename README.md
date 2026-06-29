@@ -8,16 +8,10 @@ This repository is my portable workstation setup. It tracks shell, editor, termi
 
 - OS: Omarchy + WSL2
 - Shell: Bash
-- Terminal: Ghostty
+- Terminal: Ghostty + Allacritty
 - Prompt: Starship
 - Editors: VSCode, Zed
 - Agent harness: OpenCode
-
-## Philosophy
-
-This is a living setup, not an archive of old desktop environments or one-off experiments.
-
-Prefer small, explicit configuration over opaque installers. Scripts should be idempotent, easy to inspect, and safe to rerun.
 
 ## Usage
 
