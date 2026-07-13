@@ -2,13 +2,13 @@
 
 Personal dotfiles for my Linux development environment.
 
-This repository is my portable workstation setup. It tracks shell, editor, terminal, prompt, agent harness, and other development configuration that I can replicate across devices.
+This repository is my portable workstation setup. It tracks shell, editor, prompt, agent harness, and other development configuration that I can replicate across devices.
 
 ## Target setup
 
 - OS: Omarchy + WSL2
 - Shell: Bash
-- Terminal: Ghostty + Allacritty
+- Terminal: Alacritty
 - Prompt: Starship
 - Editors: VSCode, Zed
 - Agent harness: OpenCode
