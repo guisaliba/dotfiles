@@ -11,7 +11,7 @@
 - Read `agents/README.md` for the detailed agent setup, runtime wiring, and integration commands.
 - `agents/apply.sh` is the executable source of truth for OpenCode setup. It requires `curl`, `git`, `npm`, `npx`, and `python3` and performs network installs plus mutations under `~/.config/opencode`, `~/.agents/skills`, and other harness config directories. Do not run it as a read-only verification step.
 - The apply script merges the Plannotator plugin into an existing `~/.config/opencode/opencode.json`; it copies, rather than symlinks, `agents/AGENTS.md`.
-- Most skills are fetched live on every apply. Only local skills belong under `agents/skills/`: `find-skills` is installed by `apply.sh`; `auto-pr-review` is manual-only.
+- Most skills are fetched live on every apply. Only local tracked skills belong under `agents/skills/`: `find-skills` and `auto-pr-review` are copied by `apply.sh`.
 - Do not vendor upstream plugin or skill payloads. Update their source/version declarations in `agents/apply.sh` instead.
 
 ## Verification
