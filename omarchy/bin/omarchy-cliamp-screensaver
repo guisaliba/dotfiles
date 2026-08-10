@@ -23,11 +23,15 @@ select_monitor() {
     | if ($monitors | length) == 0 then
         empty
       else
-        ([$monitors[] | select(.physical_area > 0)] | if length > 0 then . else $monitors end) as $measured
-        | ($measured | map(.physical_area) | max) as $max_physical
-        | ([$measured[] | select(.physical_area == $max_physical)]) as $physical_candidates
-        | ($physical_candidates | map(.pixel_area) | max) as $max_pixels
-        | ([$physical_candidates[] | select(.pixel_area == $max_pixels)]) as $candidates
+        (if all($monitors[]; .physical_area > 0) then
+           ($monitors | map(.physical_area) | max) as $max_physical
+           | ([$monitors[] | select(.physical_area == $max_physical)]) as $physical_candidates
+           | ($physical_candidates | map(.pixel_area) | max) as $max_pixels
+           | [$physical_candidates[] | select(.pixel_area == $max_pixels)]
+         else
+           ($monitors | map(.pixel_area) | max) as $max_pixels
+           | [$monitors[] | select(.pixel_area == $max_pixels)]
+         end) as $candidates
         | if any($candidates[]; .name == $focused) then
             $focused
           else

@@ -44,6 +44,12 @@ missing_physical_size='[
 ]'
 [[ $(select_monitor small "$missing_physical_size") == "large" ]]
 
+mixed_physical_size='[
+  {"name":"measured-laptop","width":2560,"height":1600,"physicalWidth":300,"physicalHeight":190},
+  {"name":"unmeasured-4k","width":3840,"height":2160,"physicalWidth":0,"physicalHeight":0}
+]'
+[[ $(select_monitor measured-laptop "$mixed_physical_size") == "unmeasured-4k" ]]
+
 fake_bin="$test_root/bin"
 fake_home="$test_root/home"
 fake_runtime="$test_root/runtime"
