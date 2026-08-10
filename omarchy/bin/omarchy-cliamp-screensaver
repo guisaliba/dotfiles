@@ -1,0 +1,928 @@
+#!/bin/bash
+
+set -Eeuo pipefail
+umask 077
+
+runtime_dir="${XDG_RUNTIME_DIR:-/tmp}/omarchy-cliamp-screensaver-$UID"
+state_file="$runtime_dir/state.json"
+lock_file="$runtime_dir/lock"
+arm_file="$runtime_dir/armed"
+
+dispatch() {
+  hyprctl dispatch "$@" >/dev/null
+}
+
+select_monitor() {
+  local focused_monitor=$1
+
+  jq -r --arg focused "$focused_monitor" '
+    map(. + {
+      physical_area: ((.physicalWidth // 0) * (.physicalHeight // 0)),
+      pixel_area: ((.width // 0) * (.height // 0))
+    }) as $monitors
+    | if ($monitors | length) == 0 then
+        empty
+      else
+        ([$monitors[] | select(.physical_area > 0)] | if length > 0 then . else $monitors end) as $measured
+        | ($measured | map(.physical_area) | max) as $max_physical
+        | ([$measured[] | select(.physical_area == $max_physical)]) as $physical_candidates
+        | ($physical_candidates | map(.pixel_area) | max) as $max_pixels
+        | ([$physical_candidates[] | select(.pixel_area == $max_pixels)]) as $candidates
+        | if any($candidates[]; .name == $focused) then
+            $focused
+          else
+            $candidates[0].name
+          end
+      end
+  '
+}
+
+find_cliamp_window() {
+  local cliamp_pid=$1
+  local clients=$2
+  local pid=$cliamp_pid
+  local window
+
+  while ((pid > 1)); do
+    window=$(jq -c --argjson pid "$pid" 'first(.[] | select(.pid == $pid)) // empty' <<<"$clients")
+    if [[ -n $window ]]; then
+      printf '%s\n' "$window"
+      return 0
+    fi
+
+    pid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
+    [[ $pid =~ ^[0-9]+$ ]] || break
+  done
+
+  return 1
+}
+
+prepare_runtime() {
+  if [[ -L $runtime_dir ]]; then
+    printf 'Unsafe runtime path: %s is a symbolic link\n' "$runtime_dir" >&2
+    return 1
+  fi
+
+  mkdir -p -m 700 "$runtime_dir"
+  chmod 700 "$runtime_dir"
+  [[ $(stat -c '%u' "$runtime_dir") == "$UID" ]]
+}
+
+quarantine_state() {
+  local invalid_state="$runtime_dir/state.invalid.$(date +%s).$$"
+
+  mv "$state_file" "$invalid_state"
+  rm -f "$arm_file"
+  printf 'Invalid screensaver state moved to %s\n' "$invalid_state" >&2
+}
+
+state_is_valid() {
+  jq -e '
+    .version == 2
+    and (.run_id | type == "string" and length > 0)
+    and (.mode == "custom" or .mode == "fallback")
+    and (.owned_windows | type == "array")
+    and (.cursor_invisible | type == "number")
+    and (.monitor_names | type == "array")
+  ' <<<"$1" >/dev/null 2>&1
+}
+
+write_state() {
+  local state=$1
+
+  printf '%s\n' "$state" >"$state_file.tmp"
+  mv "$state_file.tmp" "$state_file"
+}
+
+append_owned_window() {
+  local run_id=$1
+  local window=$2
+  local state
+
+  state=$(<"$state_file")
+  [[ $(jq -r '.run_id' <<<"$state") == "$run_id" ]] || return 1
+  state=$(jq --argjson window "$window" '.owned_windows += [$window]' <<<"$state")
+  write_state "$state"
+}
+
+request_cancel() {
+  local expected_run_id=${1:-}
+  local state
+  local run_id
+  local cancel_tmp="$runtime_dir/cancel.tmp.$$"
+
+  [[ -s $state_file ]] || return 0
+  state=$(<"$state_file")
+  state_is_valid "$state" || return 0
+  run_id=$(jq -r '.run_id' <<<"$state")
+  if [[ -n $expected_run_id && $run_id != "$expected_run_id" ]]; then
+    return 0
+  fi
+
+  printf '%s\n' "$run_id" >"$cancel_tmp"
+  mv "$cancel_tmp" "$runtime_dir/cancel"
+}
+
+run_cancelled() {
+  local run_id=$1
+
+  [[ -s $runtime_dir/cancel ]] && [[ $(<"$runtime_dir/cancel") == "$run_id" ]]
+}
+
+remove_cancel() {
+  local run_id=$1
+
+  if [[ -s $runtime_dir/cancel ]] && [[ $(<"$runtime_dir/cancel") == "$run_id" ]]; then
+    rm -f "$runtime_dir/cancel"
+  fi
+}
+
+owned_window_is_live() {
+  local state=$1
+  local clients
+
+  clients=$(hyprctl -j clients 2>/dev/null || printf '[]')
+  jq -e --argjson clients "$clients" '
+    any(.owned_windows[];
+      . as $owned
+      | any($clients[];
+          .address == $owned.address
+          and .pid == $owned.pid
+          and .class == $owned.class
+          and .title == $owned.title))
+  ' <<<"$state" >/dev/null 2>&1
+}
+
+capture_snapshot() {
+  local clients_before
+  local clients_after
+  local monitors_before
+  local monitors_after
+  local active_window
+  local clients_signature_before
+  local clients_signature_after
+  local monitors_signature_before
+  local monitors_signature_after
+
+  for _ in {1..3}; do
+    clients_before=$(hyprctl -j clients) || return 1
+    monitors_before=$(hyprctl -j monitors) || return 1
+    active_window=$(hyprctl -j activewindow) || return 1
+    clients_after=$(hyprctl -j clients) || return 1
+    monitors_after=$(hyprctl -j monitors) || return 1
+
+    clients_signature_before=$(jq -Sc '[.[] | {address, pid, workspace, monitor, fullscreen, fullscreenClient, floating}]' <<<"$clients_before")
+    clients_signature_after=$(jq -Sc '[.[] | {address, pid, workspace, monitor, fullscreen, fullscreenClient, floating}]' <<<"$clients_after")
+    monitors_signature_before=$(jq -Sc '[.[] | {id, name, focused, activeWorkspace, width, height, physicalWidth, physicalHeight}]' <<<"$monitors_before")
+    monitors_signature_after=$(jq -Sc '[.[] | {id, name, focused, activeWorkspace, width, height, physicalWidth, physicalHeight}]' <<<"$monitors_after")
+
+    if [[ $clients_signature_before == "$clients_signature_after" && $monitors_signature_before == "$monitors_signature_after" ]]; then
+      jq -n \
+        --argjson clients "$clients_after" \
+        --argjson monitors "$monitors_after" \
+        --argjson active_window "$active_window" \
+        '{clients: $clients, monitors: $monitors, active_window: $active_window}'
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+close_owned_windows() {
+  local state=$1
+  local clients
+  local address
+  local pid
+  local class
+  local title
+
+  clients=$(hyprctl -j clients 2>/dev/null || printf '[]')
+  while IFS=$'\t' read -r address pid class title; do
+    [[ -n $address && -n $pid && -n $class ]] || continue
+    if jq -e \
+      --arg address "$address" \
+      --argjson pid "$pid" \
+      --arg class "$class" \
+      --arg title "$title" \
+      '.[] | select(.address == $address and .pid == $pid and .class == $class and .title == $title)' \
+      <<<"$clients" >/dev/null; then
+      dispatch closewindow "address:$address" || true
+    fi
+  done < <(jq -r '.owned_windows[] | [.address, (.pid | tostring), .class, .title] | @tsv' <<<"$state")
+}
+
+restore() {
+  local expected_run_id=${1:-}
+  local state
+  local run_id
+  local cliamp_address
+  local cliamp_workspace_id
+  local cliamp_monitor
+  local fullscreen
+  local fullscreen_client
+  local cursor_invisible
+  local focused_address
+  local focused_monitor
+  local focused_pid
+
+  if [[ ! -s $state_file ]]; then
+    return 0
+  fi
+
+  state=$(<"$state_file")
+  if ! state_is_valid "$state"; then
+    quarantine_state
+    return 0
+  fi
+
+  run_id=$(jq -r '.run_id // empty' <<<"$state")
+  if [[ -n $expected_run_id && $run_id != "$expected_run_id" ]]; then
+    return 0
+  fi
+
+  close_owned_windows "$state"
+  if [[ $(jq -r '.mode' <<<"$state") == "fallback" ]]; then
+    focused_address=$(jq -r '.focused.address // empty' <<<"$state")
+    focused_monitor=$(jq -r '.focused.monitor // empty' <<<"$state")
+    focused_pid=$(jq -r '.focused.pid // 0' <<<"$state")
+    if [[ -n $focused_address ]] && hyprctl -j clients | jq -e \
+      --arg address "$focused_address" \
+      --argjson pid "$focused_pid" \
+      '.[] | select(.address == $address and .pid == $pid)' >/dev/null; then
+      dispatch focuswindow "address:$focused_address" || true
+    elif [[ -n $focused_monitor ]]; then
+      dispatch focusmonitor "$focused_monitor" || true
+    fi
+    hyprctl keyword cursor:invisible "$(jq -r '.cursor_invisible' <<<"$state")" >/dev/null 2>&1 || true
+    rm -f "$arm_file" "$state_file"
+    remove_cancel "$run_id"
+    return 0
+  fi
+
+  if ! jq -e '
+    (.cliamp.address | type == "string")
+    and (.cliamp.pid | type == "number")
+    and (.cliamp.window_pid | type == "number")
+    and (.cliamp.workspace_id | type == "number")
+    and (.cliamp.monitor | type == "string")
+    and (.cliamp.fullscreen | type == "number")
+    and (.cliamp.fullscreen_client | type == "number")
+    and (.focused.monitor | type == "string")
+    and (.monitor_workspaces | type == "array")
+  ' <<<"$state" >/dev/null 2>&1; then
+    quarantine_state
+    return 0
+  fi
+  cliamp_address=$(jq -r '.cliamp.address' <<<"$state")
+  cliamp_workspace_id=$(jq -r '.cliamp.workspace_id' <<<"$state")
+  cliamp_monitor=$(jq -r '.cliamp.monitor' <<<"$state")
+  fullscreen=$(jq -r '.cliamp.fullscreen' <<<"$state")
+  fullscreen_client=$(jq -r '.cliamp.fullscreen_client' <<<"$state")
+  cursor_invisible=$(jq -r '.cursor_invisible' <<<"$state")
+  focused_address=$(jq -r '.focused.address // empty' <<<"$state")
+  focused_monitor=$(jq -r '.focused.monitor' <<<"$state")
+  focused_pid=$(jq -r '.focused.pid // 0' <<<"$state")
+
+  if hyprctl -j clients | jq -e \
+    --arg address "$cliamp_address" \
+    --argjson pid "$(jq -r '.cliamp.window_pid' <<<"$state")" \
+    '.[] | select(.address == $address and .pid == $pid)' >/dev/null; then
+    dispatch focuswindow "address:$cliamp_address" || true
+    dispatch fullscreenstate "$fullscreen" "$fullscreen_client" || true
+
+    if hyprctl -j monitors | jq -e --arg name "$cliamp_monitor" '.[] | select(.name == $name)' >/dev/null; then
+      dispatch moveworkspacetomonitor "$cliamp_workspace_id" "$cliamp_monitor" || true
+    fi
+  fi
+
+  while IFS=$'\t' read -r monitor workspace_id; do
+    [[ -n $monitor && -n $workspace_id ]] || continue
+    if hyprctl -j monitors | jq -e --arg name "$monitor" '.[] | select(.name == $name)' >/dev/null &&
+      hyprctl -j workspaces | jq -e --argjson id "$workspace_id" '.[] | select(.id == $id)' >/dev/null; then
+      dispatch focusmonitor "$monitor" || true
+      dispatch workspace "$workspace_id" || true
+    fi
+  done < <(jq -r '.monitor_workspaces[] | [.monitor, (.workspace_id | tostring)] | @tsv' <<<"$state")
+
+  if [[ -n $focused_address ]] && hyprctl -j clients | jq -e \
+    --arg address "$focused_address" \
+    --argjson pid "$focused_pid" \
+    '.[] | select(.address == $address and ($pid == 0 or .pid == $pid))' >/dev/null; then
+    dispatch focuswindow "address:$focused_address" || true
+  else
+    dispatch focusmonitor "$focused_monitor" || true
+  fi
+
+  hyprctl keyword cursor:invisible "$cursor_invisible" >/dev/null 2>&1 || true
+  rm -f "$arm_file" "$state_file"
+  remove_cancel "$run_id"
+}
+
+launch_stock_screensaver() {
+  local monitor=$1
+  local run_id=$2
+  local monitor_id
+  local title="Omarchy Screensaver:$run_id:$monitor"
+  local window=""
+
+  dispatch focusmonitor "$monitor"
+  monitor_id=$(hyprctl -j monitors | jq -r --arg monitor "$monitor" '.[] | select(.name == $monitor) | .id')
+  setsid uwsm-app -- \
+    alacritty --class=org.omarchy.screensaver \
+    --title="$title" \
+    --config-file "$HOME/.local/share/omarchy/default/alacritty/screensaver.toml" \
+    -e "$0" stock "$run_id" 9>&- >/dev/null 2>&1 &
+
+  for _ in {1..50}; do
+    window=$(hyprctl -j clients | jq -c \
+      --argjson monitor_id "$monitor_id" \
+      --arg title "$title" '
+      first(.[] | select(
+        .class == "org.omarchy.screensaver"
+        and .monitor == $monitor_id
+        and .title == $title
+      )) // empty
+    ')
+    if [[ -n $window ]]; then
+      append_owned_window "$run_id" "$(jq -c '{address, pid, class, title}' <<<"$window")"
+      return 0
+    fi
+    sleep 0.05
+  done
+
+  return 1
+}
+
+launch_blackout() {
+  local monitor=$1
+  local run_id=$2
+  local monitor_id
+  local title="Cliamp Blackout:$run_id:$monitor"
+  local window=""
+
+  dispatch focusmonitor "$monitor"
+  monitor_id=$(hyprctl -j monitors | jq -r --arg monitor "$monitor" '.[] | select(.name == $monitor) | .id')
+  setsid uwsm-app -- \
+    alacritty --class=org.omarchy.cliamp-blackout \
+    --title="$title" \
+    --config-file "$HOME/.local/share/omarchy/default/alacritty/screensaver.toml" \
+    -o 'window.opacity=1.0' \
+    -e "$0" blackout "$run_id" 9>&- >/dev/null 2>&1 &
+
+  for _ in {1..50}; do
+    window=$(hyprctl -j clients | jq -c \
+      --argjson monitor_id "$monitor_id" \
+      --arg title "$title" '
+      first(.[] | select(
+        .class == "org.omarchy.cliamp-blackout"
+        and .monitor == $monitor_id
+        and .title == $title
+      )) // empty
+    ')
+    if [[ -n $window ]]; then
+      append_owned_window "$run_id" "$(jq -c '{address, pid, class, title}' <<<"$window")"
+      return 0
+    fi
+    sleep 0.05
+  done
+
+  return 1
+}
+
+launch_input_shield() {
+  local target_monitor=$1
+  local cliamp_workspace_id=$2
+  local cliamp_address=$3
+  local run_id=$4
+  local title="Cliamp Input Shield:$run_id"
+  local window=""
+
+  dispatch focusmonitor "$target_monitor"
+  dispatch workspace "$cliamp_workspace_id"
+  dispatch focuswindow "address:$cliamp_address"
+  setsid uwsm-app -- \
+    alacritty --class=org.omarchy.screensaver \
+    --title="$title" \
+    --config-file "$HOME/.local/share/omarchy/default/alacritty/screensaver.toml" \
+    -o 'window.opacity=1.0' \
+    -e "$0" shield "$run_id" 9>&- >/dev/null 2>&1 &
+
+  for _ in {1..50}; do
+    window=$(hyprctl -j clients | jq -c --arg title "$title" '
+      first(.[] | select(.class == "org.omarchy.screensaver" and .title == $title)) // empty
+    ' 2>/dev/null || true)
+    [[ -n $window ]] && break
+    sleep 0.05
+  done
+
+  if [[ -n $window ]]; then
+    append_owned_window "$run_id" "$(jq -c '{address, pid, class, title}' <<<"$window")"
+    dispatch focuswindow "address:$(jq -r '.address' <<<"$window")"
+    return 0
+  fi
+
+  return 1
+}
+
+configure_custom_target() {
+  local target_monitor=$1
+  local cliamp_address=$2
+  local shield_address=$3
+  local monitor_geometry
+  local monitor_width
+  local monitor_height
+  local monitor_x
+  local monitor_y
+  local clients
+
+  monitor_geometry=$(hyprctl -j monitors | jq -r --arg monitor "$target_monitor" '
+    .[]
+    | select(.name == $monitor)
+    | [((.width / .scale) | floor), ((.height / .scale) | floor), .x, .y]
+    | @tsv
+  ')
+  IFS=$'\t' read -r monitor_width monitor_height monitor_x monitor_y <<<"$monitor_geometry"
+  [[ -n $monitor_width && -n $monitor_height && -n $monitor_x && -n $monitor_y ]] || return 1
+
+  for _ in {1..20}; do
+    dispatch resizewindowpixel "exact $monitor_width $monitor_height,address:$shield_address"
+    dispatch movewindowpixel "exact $monitor_x $monitor_y,address:$shield_address"
+    dispatch focuswindow "address:$cliamp_address"
+    dispatch fullscreenstate 2 2
+    dispatch focuswindow "address:$shield_address"
+
+    clients=$(hyprctl -j clients)
+    if jq -e \
+      --arg cliamp_address "$cliamp_address" \
+      --arg shield_address "$shield_address" \
+      --argjson width "$monitor_width" \
+      --argjson height "$monitor_height" \
+      --argjson x "$monitor_x" \
+      --argjson y "$monitor_y" '
+      any(.[]; .address == $cliamp_address and .fullscreen == 2)
+      and any(.[];
+        .address == $shield_address
+        and .size == [$width, $height]
+        and .at == [$x, $y]
+      )
+    ' <<<"$clients" >/dev/null; then
+      return 0
+    fi
+    sleep 0.05
+  done
+
+  return 1
+}
+
+start_fallback() {
+  local monitors=$1
+  local run_id="$(date +%s%N)-$$-$RANDOM"
+  local cursor_invisible
+  local monitor_names
+  local current_monitor_names
+  local focused_window
+  local focused_address
+  local focused_pid
+  local focused_monitor
+  local state
+
+  [[ $(jq 'length' <<<"$monitors") -gt 0 ]] || return 1
+  cursor_invisible=$(hyprctl getoption cursor:invisible -j | jq -r '.int')
+  monitor_names=$(jq -c '[.[].name] | sort' <<<"$monitors")
+  focused_window=$(hyprctl -j activewindow)
+  focused_address=$(jq -r '.address // empty' <<<"$focused_window")
+  focused_pid=$(jq -r '.pid // 0' <<<"$focused_window")
+  focused_monitor=$(jq -r '.[] | select(.focused) | .name' <<<"$monitors")
+  state=$(jq -n \
+    --arg run_id "$run_id" \
+    --arg focused_address "$focused_address" \
+    --argjson focused_pid "$focused_pid" \
+    --arg focused_monitor "$focused_monitor" \
+    --argjson cursor_invisible "$cursor_invisible" \
+    --argjson monitor_names "$monitor_names" '
+    {
+      version: 2,
+      run_id: $run_id,
+      mode: "fallback",
+      owned_windows: [],
+      focused: {
+        address: $focused_address,
+        pid: $focused_pid,
+        monitor: $focused_monitor
+      },
+      cursor_invisible: $cursor_invisible,
+      monitor_names: $monitor_names
+    }
+  ')
+  rm -f "$arm_file"
+  write_state "$state"
+  trap 'restore "$run_id"' ERR
+  trap 'restore "$run_id"; exit 1' INT TERM HUP QUIT
+
+  hyprctl keyword cursor:invisible true >/dev/null
+  while IFS= read -r monitor; do
+    if run_cancelled "$run_id"; then
+      restore "$run_id"
+      trap - ERR INT TERM HUP QUIT
+      return 0
+    fi
+    launch_stock_screensaver "$monitor" "$run_id"
+  done < <(jq -r '.[].name' <<<"$monitors")
+
+  current_monitor_names=$(hyprctl -j monitors | jq -c '[.[].name] | sort')
+  if [[ $current_monitor_names != "$monitor_names" ]]; then
+    restore "$run_id"
+    trap - ERR INT TERM HUP QUIT
+    start_fallback "$(hyprctl -j monitors)"
+    return
+  fi
+
+  arm_input
+  launch_monitor_watch "$run_id" "$monitor_names"
+  trap - ERR INT TERM HUP QUIT
+}
+
+start() {
+  local status
+  local snapshot
+  local cliamp_pid
+  local clients
+  local monitors
+  local cliamp_window
+  local cliamp_address
+  local cliamp_workspace_id
+  local cliamp_monitor_id
+  local cliamp_monitor
+  local target_monitor
+  local focused_window
+  local focused_address
+  local focused_monitor
+  local focused_workspace_id
+  local focused_monitor_workspace_id
+  local monitor_workspaces
+  local cursor_invisible
+  local monitor_names
+  local current_monitor_names
+  local shield_address
+  local run_id
+  local state
+
+  if [[ -s $state_file ]]; then
+    state=$(<"$state_file")
+    if ! state_is_valid "$state"; then
+      quarantine_state
+    elif owned_window_is_live "$state"; then
+      return 0
+    else
+      restore "$(jq -r '.run_id' <<<"$state")"
+    fi
+  fi
+
+  if ! status=$(cliamp status --json 2>/dev/null) || ! jq -e '.ok == true' <<<"$status" >/dev/null; then
+    start_fallback "$(hyprctl -j monitors)"
+    return
+  fi
+
+  [[ -r $HOME/.config/cliamp/cliamp.sock.pid ]] || {
+    start_fallback "$(hyprctl -j monitors)"
+    return
+  }
+
+  cliamp_pid=$(<"$HOME/.config/cliamp/cliamp.sock.pid")
+  [[ $cliamp_pid =~ ^[0-9]+$ ]] && kill -0 "$cliamp_pid" 2>/dev/null || {
+    start_fallback "$(hyprctl -j monitors)"
+    return
+  }
+
+  if ! snapshot=$(capture_snapshot); then
+    printf 'Could not capture a consistent Hyprland snapshot\n' >&2
+    return 1
+  fi
+  clients=$(jq -c '.clients' <<<"$snapshot")
+  monitors=$(jq -c '.monitors' <<<"$snapshot")
+  if ! cliamp_window=$(find_cliamp_window "$cliamp_pid" "$clients"); then
+    start_fallback "$monitors"
+    return
+  fi
+
+  cliamp_address=$(jq -r '.address' <<<"$cliamp_window")
+  cliamp_workspace_id=$(jq -r '.workspace.id' <<<"$cliamp_window")
+  cliamp_monitor_id=$(jq -r '.monitor' <<<"$cliamp_window")
+  cliamp_monitor=$(jq -r --argjson id "$cliamp_monitor_id" '.[] | select(.id == $id) | .name' <<<"$monitors")
+  focused_monitor=$(jq -r '.[] | select(.focused) | .name' <<<"$monitors")
+  target_monitor=$(select_monitor "$focused_monitor" <<<"$monitors")
+
+  [[ -n $cliamp_monitor && -n $focused_monitor && -n $target_monitor ]] || {
+    start_fallback "$monitors"
+    return
+  }
+
+  focused_window=$(jq -c '.active_window' <<<"$snapshot")
+  focused_address=$(jq -r '.address // empty' <<<"$focused_window")
+  focused_workspace_id=$(jq -r '.workspace.id // 0' <<<"$focused_window")
+  focused_monitor_workspace_id=$(jq -r '.[] | select(.focused) | .activeWorkspace.id' <<<"$monitors")
+  if [[ $focused_workspace_id != "$focused_monitor_workspace_id" ]]; then
+    focused_address=""
+  fi
+  monitor_workspaces=$(jq -c '[.[] | {monitor: .name, workspace_id: .activeWorkspace.id}]' <<<"$monitors")
+  monitor_names=$(jq -c '[.[].name] | sort' <<<"$monitors")
+  cursor_invisible=$(hyprctl getoption cursor:invisible -j | jq -r '.int')
+  run_id="$(date +%s%N)-$$-$RANDOM"
+
+  state=$(jq -n \
+    --arg run_id "$run_id" \
+    --arg cliamp_address "$cliamp_address" \
+    --argjson cliamp_pid "$cliamp_pid" \
+    --argjson cliamp_window_pid "$(jq -r '.pid' <<<"$cliamp_window")" \
+    --argjson cliamp_workspace_id "$cliamp_workspace_id" \
+    --arg cliamp_monitor "$cliamp_monitor" \
+    --argjson fullscreen "$(jq -r '.fullscreen' <<<"$cliamp_window")" \
+    --argjson fullscreen_client "$(jq -r '.fullscreenClient' <<<"$cliamp_window")" \
+    --arg focused_address "$focused_address" \
+    --argjson focused_pid "$(jq -r '.pid // 0' <<<"$focused_window")" \
+    --arg focused_monitor "$focused_monitor" \
+    --arg target_monitor "$target_monitor" \
+    --argjson cursor_invisible "$cursor_invisible" \
+    --argjson monitor_names "$monitor_names" \
+    --argjson monitor_workspaces "$monitor_workspaces" \
+    '{
+      version: 2,
+      run_id: $run_id,
+      mode: "custom",
+      owned_windows: [],
+      cliamp: {
+        address: $cliamp_address,
+        pid: $cliamp_pid,
+        window_pid: $cliamp_window_pid,
+        workspace_id: $cliamp_workspace_id,
+        monitor: $cliamp_monitor,
+        fullscreen: $fullscreen,
+        fullscreen_client: $fullscreen_client
+      },
+      focused: {address: $focused_address, pid: $focused_pid, monitor: $focused_monitor},
+      target_monitor: $target_monitor,
+      cursor_invisible: $cursor_invisible,
+      monitor_names: $monitor_names,
+      monitor_workspaces: $monitor_workspaces
+    }')
+
+  rm -f "$arm_file"
+  write_state "$state"
+  trap 'restore "$run_id"' ERR
+  trap 'restore "$run_id"; exit 1' INT TERM HUP QUIT
+
+  hyprctl keyword cursor:invisible true >/dev/null
+  dispatch moveworkspacetomonitor "$cliamp_workspace_id" "$target_monitor"
+  dispatch focusmonitor "$target_monitor"
+  dispatch workspace "$cliamp_workspace_id"
+  dispatch focuswindow "address:$cliamp_address"
+  dispatch fullscreenstate 2 2
+
+  launch_input_shield "$target_monitor" "$cliamp_workspace_id" "$cliamp_address" "$run_id"
+  if run_cancelled "$run_id"; then
+    restore "$run_id"
+    trap - ERR INT TERM HUP QUIT
+    return 0
+  fi
+
+  while IFS= read -r monitor; do
+    if run_cancelled "$run_id"; then
+      restore "$run_id"
+      trap - ERR INT TERM HUP QUIT
+      return 0
+    fi
+    [[ $monitor == "$target_monitor" ]] || launch_blackout "$monitor" "$run_id"
+  done < <(jq -r '.[].name' <<<"$monitors")
+
+  state=$(<"$state_file")
+  shield_address=$(jq -r --arg title "Cliamp Input Shield:$run_id" '.owned_windows[] | select(.title == $title) | .address' <<<"$state")
+  configure_custom_target "$target_monitor" "$cliamp_address" "$shield_address"
+
+  current_monitor_names=$(hyprctl -j monitors | jq -c '[.[].name] | sort')
+  if [[ $current_monitor_names != "$monitor_names" ]]; then
+    restore "$run_id"
+    trap - ERR INT TERM HUP QUIT
+    start_fallback "$(hyprctl -j monitors)"
+    return
+  fi
+
+  arm_input
+  launch_monitor_watch "$run_id" "$monitor_names"
+  trap - ERR INT TERM HUP QUIT
+}
+
+enable_terminal_input() {
+  local input
+  local quiet_intervals=0
+
+  printf '\033[?1003h\033[?1006h'
+  while ((quiet_intervals < 4)); do
+    if IFS= read -rsN1 -t 0.05 input; then
+      quiet_intervals=0
+    else
+      ((quiet_intervals += 1))
+    fi
+  done
+}
+
+arm_input() {
+  local pending_arm="$arm_file.$$"
+
+  printf '%s\n' "$(date +%s%N)" >"$pending_arm"
+  mv "$pending_arm" "$arm_file"
+}
+
+resume() {
+  local event_time=$1
+  local armed_time
+
+  [[ $event_time =~ ^[0-9]+$ && -s $arm_file ]] || return 0
+  armed_time=$(<"$arm_file")
+  [[ $armed_time =~ ^[0-9]+$ ]] || return 0
+  ((event_time > armed_time)) || return 0
+  restore
+}
+
+wait_for_arm() {
+  local run_id=$1
+  local state
+
+  while true; do
+    [[ -s $state_file ]] || return 1
+    state=$(<"$state_file")
+    state_is_valid "$state" || return 1
+    [[ $(jq -r '.run_id' <<<"$state") == "$run_id" ]] || return 1
+    [[ -e $arm_file ]] && return 0
+    sleep 0.05
+  done
+}
+
+stock() {
+  local run_id=$1
+  local tte_pid
+
+  cleanup() {
+    trap - EXIT INT TERM HUP QUIT
+    [[ -n ${tte_pid:-} ]] && kill "$tte_pid" 2>/dev/null || true
+    printf '\033[?1003l\033[?1006l'
+    exec "$0" stop "$run_id"
+  }
+
+  trap cleanup EXIT INT TERM HUP QUIT
+  printf '\033]11;rgb:00/00/00\007'
+  wait_for_arm "$run_id" || return 0
+  enable_terminal_input
+
+  while true; do
+    tte -i "$HOME/.config/omarchy/branding/screensaver.txt" \
+      --frame-rate 120 --canvas-width 0 --canvas-height 0 --reuse-canvas \
+      --anchor-canvas c --anchor-text c --random-effect --no-eol \
+      --no-restore-cursor &
+    tte_pid=$!
+
+    while kill -0 "$tte_pid" 2>/dev/null; do
+      if IFS= read -rsn1 -t 1; then
+        cleanup
+      fi
+    done
+    wait "$tte_pid" 2>/dev/null || true
+  done
+}
+
+blackout() {
+  local run_id=$1
+  local input
+
+  cleanup() {
+    trap - EXIT INT TERM HUP QUIT
+    printf '\033[?1003l\033[?1006l'
+    exec "$0" stop "$run_id"
+  }
+
+  trap cleanup EXIT INT TERM HUP QUIT
+  wait_for_arm "$run_id" || return 0
+  enable_terminal_input
+  while true; do
+    if IFS= read -rsN1 -t 1 input; then
+      cleanup
+    fi
+  done
+}
+
+shield() {
+  local run_id=$1
+  local input
+
+  cleanup() {
+    trap - EXIT INT TERM HUP QUIT
+    printf '\033[?1003l\033[?1006l'
+    exec "$0" stop "$run_id"
+  }
+
+  trap cleanup EXIT INT TERM HUP QUIT
+  wait_for_arm "$run_id" || return 0
+  enable_terminal_input
+  while true; do
+    if IFS= read -rsN1 -t 1 input; then
+      cleanup
+    fi
+    sleep 0.05
+  done
+}
+
+monitor_watch() {
+  local run_id=$1
+  local expected_monitors=$2
+  local state
+  local current_monitors
+
+  while sleep 0.25; do
+    [[ -s $state_file ]] || return 0
+    state=$(<"$state_file")
+    state_is_valid "$state" || return 0
+    [[ $(jq -r '.run_id' <<<"$state") == "$run_id" ]] || return 0
+
+    current_monitors=$(hyprctl -j monitors 2>/dev/null | jq -c '[.[].name] | sort') || continue
+    if [[ $current_monitors != "$expected_monitors" ]]; then
+      "$0" hotplug-fallback "$run_id"
+      return 0
+    fi
+  done
+}
+
+hotplug_fallback() {
+  local expected_run_id=$1
+  local state
+
+  [[ -s $state_file ]] || return 0
+  state=$(<"$state_file")
+  state_is_valid "$state" || return 0
+  [[ $(jq -r '.run_id' <<<"$state") == "$expected_run_id" ]] || return 0
+
+  restore "$expected_run_id"
+  if [[ $(hyprctl locked 2>/dev/null || printf 'true') == "false" ]]; then
+    start_fallback "$(hyprctl -j monitors)"
+  fi
+}
+
+launch_monitor_watch() {
+  local run_id=$1
+  local monitor_names=$2
+
+  setsid "$0" monitor-watch "$run_id" "$monitor_names" 9>&- >/dev/null 2>&1 &
+}
+
+main() {
+  local action=${1:-}
+
+  if [[ $action == "select-monitor" ]]; then
+    select_monitor "${2:?focused monitor is required}"
+    return
+  fi
+
+  if [[ $action == "shield" ]]; then
+    shield "${2:?run ID is required}"
+    return
+  fi
+
+  if [[ $action == "stock" ]]; then
+    stock "${2:?run ID is required}"
+    return
+  fi
+
+  if [[ $action == "blackout" ]]; then
+    blackout "${2:?run ID is required}"
+    return
+  fi
+
+  if [[ $action == "monitor-watch" ]]; then
+    monitor_watch "${2:?run ID is required}" "${3:?monitor list is required}"
+    return
+  fi
+
+  if [[ $action == "stop" ]]; then
+    trap '' HUP
+  fi
+
+  prepare_runtime
+  if [[ $action == "stop" ]]; then
+    request_cancel "${2:-}"
+  fi
+  exec 9>"$lock_file"
+  flock 9
+
+  case $action in
+  start) start ;;
+  fallback) start_fallback "$(hyprctl -j monitors)" ;;
+  hotplug-fallback) hotplug_fallback "${2:?run ID is required}" ;;
+  resume) resume "${2:?event time is required}" ;;
+  stop) restore "${2:-}" ;;
+  *)
+    printf 'Usage: %s <start|stop|resume|select-monitor>\n' "$0" >&2
+    return 2
+    ;;
+  esac
+}
+
+main "$@"

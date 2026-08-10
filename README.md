@@ -24,6 +24,10 @@ cd ~/dotfiles
 
 Apply files selectively. Do not blindly overwrite configuration unless the target is documented as managed.
 
+Available profiles:
+
+- `omarchy/`: tested Omarchy 3 Cliamp screensaver setup. See `omarchy/README.md` before applying it. It intentionally rejects Omarchy Quattro.
+
 ## License
 
 MIT License
