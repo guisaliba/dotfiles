@@ -46,7 +46,12 @@ EOF
 
   chmod +x "$fake_bin/omarchy" "$fake_bin/hyprctl"
   for command_name in alacritty cliamp hypridle hyprlock tte uwsm-app; do
-    ln -s "$(command -v true)" "$fake_bin/$command_name"
+    cat >"$fake_bin/$command_name" <<'EOF'
+#!/bin/bash
+exit 0
+EOF
+    chmod +x "$fake_bin/$command_name"
+    [[ $(PATH="$fake_bin" command -v "$command_name") == "$fake_bin/$command_name" ]]
   done
 
   HOME="$fixture_home" \
