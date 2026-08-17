@@ -11,7 +11,7 @@ This repository is my portable workstation setup. It tracks shell, editor, promp
 - Terminal: Alacritty
 - Prompt: Starship
 - Editors: VSCode, Zed
-- Agent harness: OpenCode
+- Agent harness: OpenCode with ai-memory continuity and optional ai-jail containment
 
 ## Usage
 
@@ -23,6 +23,8 @@ cd ~/dotfiles
 ```
 
 Apply files selectively. Do not blindly overwrite configuration unless the target is documented as managed.
+
+The complete agent-stack setup is in [`agents/README.md`](agents/README.md). Run its apply script only on the intended workstation because it installs native tools, starts a user service, and changes global OpenCode configuration. The default ai-memory profile uses DeepSeek V4 Flash through OpenCode Go and stays in zero-LLM mode until its separate `OPENCODE_API_KEY` is configured.
 
 ## License
 
