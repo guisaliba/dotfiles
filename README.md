@@ -13,6 +13,8 @@ This repository is my portable workstation setup. It tracks shell, editor, promp
 - Editors: VSCode, Zed
 - Agent harness: OpenCode with [ai-memory](https://github.com/akitaonrails/ai-memory) continuity
 
+The Omarchy clamshell power-management setup is in [`omarchy/`](omarchy/README.md). Apply it only on a workstation that is used with its lid closed and an external display.
+
 ## Usage
 
 Clone the repository:

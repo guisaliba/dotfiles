@@ -1,0 +1,3 @@
+# Allow USB Bluetooth keyboards and mice to wake the system from suspend.
+# The rule targets the USB Bluetooth class, not a device-specific bus path.
+ACTION=="add|change", SUBSYSTEM=="usb", DRIVERS=="usb", ATTR{bDeviceClass}=="e0", ATTR{bDeviceSubClass}=="01", ATTR{bDeviceProtocol}=="01", ATTR{power/wakeup}="enabled"
