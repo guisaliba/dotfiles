@@ -1,0 +1,30 @@
+# extension_id
+# This file is the source of truth for tracked VS Code extensions.
+# install.sh reads it for --vscode-extensions validation and installation.
+bierner.markdown-mermaid
+bradlc.vscode-tailwindcss
+charliermarsh.ruff
+davidanson.vscode-markdownlint
+dbaeumer.vscode-eslint
+docker.docker
+editorconfig.editorconfig
+esbenp.prettier-vscode
+expo.vscode-expo-tools
+icrawl.discord-vscode
+miguelsolorio.min-theme
+miguelsolorio.symbols
+ms-azuretools.vscode-containers
+ms-azuretools.vscode-docker
+naumovs.color-highlight
+prisma.prisma
+redhat.java
+redhat.vscode-xml
+redhat.vscode-yaml
+ritwickdey.liveserver
+styled-components.vscode-styled-components
+sonarsource.sonarlint-vscode
+tamasfe.even-better-toml
+tomoki1207.pdf
+usernamehw.errorlens
+wix.vscode-import-cost
+yoavbls.pretty-ts-errors

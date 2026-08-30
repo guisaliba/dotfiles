@@ -1,29 +1,19 @@
-# VSCode Extensions
+# VS Code Extensions
 
-bierner.markdown-mermaid
-bradlc.vscode-tailwindcss
-charliermarsh.ruff
-davidanson.vscode-markdownlint
-dbaeumer.vscode-eslint
-docker.docker
-editorconfig.editorconfig
-esbenp.prettier-vscode
-expo.vscode-expo-tools
-icrawl.discord-vscode
-miguelsolorio.min-theme
-miguelsolorio.symbols
-ms-azuretools.vscode-containers
-ms-azuretools.vscode-docker
-naumovs.color-highlight
-prisma.prisma
-redhat.java
-redhat.vscode-xml
-redhat.vscode-yaml
-ritwickdey.liveserver
-styled-components.vscode-styled-components
-sonarsource.sonarlint-vscode
-tamasfe.even-better-toml
-tomoki1207.pdf
-usernamehw.errorlens
-wix.vscode-import-cost
-yoavbls.pretty-ts-errors
+The extension list lives in [`extensions.tsv`](extensions.tsv). That file is the
+single source of truth. `install.sh` reads it to validate and install the
+selected extensions with `code --install-extension`.
+
+## How to add an extension
+
+1. Open `vscode/extensions.tsv`.
+2. Add one line with the exact extension identifier, for example `esbenp.prettier-vscode`.
+3. Keep the list sorted or grouped as you prefer; `install.sh` does not require an order.
+
+`install.sh` accepts the identifiers from this file with
+`--vscode-extensions <all|none|comma-separated-ids>`.
+
+## Current tracked extensions
+
+The complete list is the non-comment content of `vscode/extensions.tsv`.
+`install.sh --check --components vscode` prints the current selection count.

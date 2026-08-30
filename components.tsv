@@ -1,0 +1,11 @@
+# component<TAB>action<TAB>source<TAB>target<TAB>hosts<TAB>default<TAB>risk
+# bashrc is selected as part of bash on WSL2 and is never selectable alone.
+bash	merge-block	bash/aliases.bash	~/.bash_aliases	linux,wsl2,omarchy	yes	normal
+bashrc	copy-file	bash/wsl/.bashrc	~/.bashrc	wsl2	no	normal
+git	copy-file	git/.gitconfig	~/.gitconfig	linux,wsl2,omarchy	yes	normal
+wallpapers	replace-tree	wallpapers/	~/Pictures/wallpapers	linux,wsl2,omarchy	yes	normal
+starship	copy-file	starship/starship.toml	~/.config/starship.toml	linux,wsl2,omarchy	no	normal
+vscode	vscode	vscode/settings.json	~/.config/Code/User/settings.json	linux,wsl2,omarchy	no	normal
+zed	zed	zed/.config	~/.config/zed/	linux,wsl2,omarchy	no	normal
+agents	agents	https://github.com/guisaliba/agents	~/.local/share/dotfiles/agents	linux,wsl2,omarchy	no	network-service
+omarchy-power	omarchy-power	omarchy/apply-power-management.sh		omarchy	no	root-power

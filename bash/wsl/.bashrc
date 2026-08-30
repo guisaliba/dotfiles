@@ -116,6 +116,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # opencode
-export PATH=/home/guisaliba/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$PATH"
 
 eval "$(starship init bash)"

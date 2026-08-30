@@ -10,3 +10,7 @@ backups/
 .vscode/
 
 # App-specific ignores live in per-directory .gitignore files
+
+# Python bytecode from repository-only checks
+__pycache__/
+*.py[cod]
