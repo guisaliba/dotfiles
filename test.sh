@@ -286,7 +286,7 @@ EOF
 
 clone_agent_checkout() {
   mkdir -p "$(dirname -- "$AGENT_CHECKOUT")"
-  git clone --quiet "$AGENT_REMOTE" "$AGENT_CHECKOUT"
+  git clone --quiet --branch main "$AGENT_REMOTE" "$AGENT_CHECKOUT"
 }
 
 agents_repo_push_fail_apply() {
