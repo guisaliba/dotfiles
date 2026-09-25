@@ -237,20 +237,6 @@ restrict_path() {
   EXTRA_ENV+=("PATH=$bindir")
 }
 
-make_omarchy_stub() {
-  cat >"$FIXTURE_ROOT/omarchy-apply-stub" <<'EOF'
-#!/usr/bin/env bash
-printf 'omarchy apply ran\n' >>"$DOTFILES_FIXTURE_OMARCHY_LOG"
-EOF
-  chmod +x "$FIXTURE_ROOT/omarchy-apply-stub"
-  EXTRA_ENV+=(
-    "DOTFILES_OMARCHY_APPLY=$FIXTURE_ROOT/omarchy-apply-stub"
-    "DOTFILES_FIXTURE_OMARCHY_LOG=$FIXTURE_ROOT/omarchy.log"
-  )
-  OMARCHY_LOG="$FIXTURE_ROOT/omarchy.log"
-  : >"$OMARCHY_LOG"
-}
-
 make_agents_repo() {
   local source="$FIXTURE_ROOT/agents-source"
   AGENT_SOURCE="$source"
@@ -318,8 +304,11 @@ require_file "$REPO_DIR/bash/aliases.bash"
 require_file "$REPO_DIR/vscode/extensions.tsv"
 require_executable "$REPO_DIR/install.sh"
 require_executable "$REPO_DIR/test.sh"
-require_executable "$REPO_DIR/omarchy/apply-power-management.sh"
 require_executable "$REPO_DIR/omarchy/mx-mini-recover.sh"
+require_file "$REPO_DIR/omarchy/display-plugin/Panel.qml"
+require_file "$REPO_DIR/omarchy/display-plugin/Model.js"
+require_file "$REPO_DIR/omarchy/display-plugin/layout.py"
+require_file "$REPO_DIR/omarchy/install-display.py"
 if python3 "$HELPER" manifest "$REPO_DIR/components.tsv" >/dev/null 2>&1; then
   ok "components manifest is valid"
 else
@@ -371,7 +360,7 @@ test_cli_validation() {
   invoke '' 2 --components vscode --yes
   err_contains 'is required with --yes'
   invoke '' 2 --components omarchy-power
-  err_contains 'not applicable to host linux'
+  err_contains 'unknown component'
   invoke '' 2 --components bash,bash
   err_contains 'duplicate component'
   invoke '' 2 positional
@@ -884,33 +873,71 @@ test_agents_refusals_and_failures() {
 
 test_agents_refusals_and_failures
 
-# --- Omarchy power ---
+# --- Display enhancement installer ---
 
-printf '\n--- Omarchy Power ---\n'
+printf '\n--- Omarchy Display ---\n'
 
-test_omarchy_power() {
+test_display_component() {
   new_fixture
-  make_omarchy_stub
   host_omarchy
-  invoke 'n\n' 0 --host omarchy --components omarchy-power --yes
-  out_contains 'Skipped'
-  file_empty "$OMARCHY_LOG"
+  local native="$FIXTURE_ROOT/native-display"
+  local target="$FIXTURE_HOME/.config/omarchy/plugins/guisaliba.monitor"
+  local config="$FIXTURE_HOME/.config/omarchy/shell.json"
+  mkdir -p "$native" "$(dirname "$config")"
+  printf 'panel fixture\n' >"$native/Panel.qml"
+  printf 'model fixture\n' >"$native/Model.js"
+  printf 'manifest fixture\n' >"$native/manifest.json"
+  ( cd "$native" && sha256sum Panel.qml Model.js manifest.json ) >"$FIXTURE_ROOT/upstream.sha256"
+  printf '{"bar":{"layout":{"left":[],"center":[],"right":[{"id":"omarchy.monitor","keep":true}]}},"plugins":[],"other":42}\n' >"$config"
+  EXTRA_ENV+=("DOTFILES_DISPLAY_NATIVE_DIR=$native" "DOTFILES_DISPLAY_SIGNATURES=$FIXTURE_ROOT/upstream.sha256")
 
-  invoke 'y\n' 0 --host omarchy --components omarchy-power --yes
-  file_contains "$OMARCHY_LOG" "omarchy apply ran"
-  out_contains '/etc/systemd/logind.conf.d/90-dotfiles-clamshell.conf'
-  out_contains '/etc/udev/rules.d/91-dotfiles-bluetooth-wakeup.rules'
-  out_contains 'systemd-logind'
-  out_contains 'udev rules'
-  out_not_contains 'mx-mini-recover'
+  invoke '' 0 --check --host omarchy --components omarchy-display
+  out_contains 'no writes'
+  file_absent "$target"
+  file_not_contains "$config" 'guisaliba.monitor'
+
+  invoke '' 0 --host omarchy --components omarchy-display --yes
+  file_exists "$target/Panel.qml"
+  file_exists "$target/.dotfiles-display-receipt.json"
+  file_contains "$config" 'guisaliba.monitor'
+  file_contains "$config" '"keep": true'
+  file_contains "$config" '"other": 42'
+  invoke '' 0 --host omarchy --components omarchy-display --yes
+  out_contains 'already installed'
+
+  printf 'local edit\n' >>"$target/Panel.qml"
+  invoke '' 1 --host omarchy --components omarchy-display --yes
+  err_contains 'local changes'
+  file_contains "$target/Panel.qml" 'local edit'
+
+  printf 'upstream changed\n' >>"$native/Panel.qml"
+  invoke '' 1 --check --host omarchy --components omarchy-display
+  err_contains 'native Display contract differs'
+  file_contains "$config" 'guisaliba.monitor'
+  invoke '' 1 --host omarchy --components omarchy-display --yes
+  err_contains 'Native Display restored'
+  file_contains "$config" 'omarchy.monitor'
+  file_not_contains "$config" 'guisaliba.monitor'
 
   new_fixture
-  host_wsl2
-  invoke '' 2 --host wsl2 --components omarchy-power
-  err_contains 'not applicable to host wsl2'
+  host_omarchy
+  mkdir -p "$FIXTURE_HOME/.config/omarchy/plugins/guisaliba.monitor" "$FIXTURE_HOME/.config/omarchy"
+  printf 'unmanaged\n' >"$FIXTURE_HOME/.config/omarchy/plugins/guisaliba.monitor/manifest.json"
+  printf '{"bar":{"layout":{"right":[{"id":"omarchy.monitor"}]}}}\n' >"$FIXTURE_HOME/.config/omarchy/shell.json"
+  # A matching fake native contract isolates the unmanaged-target gate.
+  native="$FIXTURE_ROOT/native-display"
+  mkdir -p "$native"
+  printf 'panel fixture\n' >"$native/Panel.qml"
+  printf 'model fixture\n' >"$native/Model.js"
+  printf 'manifest fixture\n' >"$native/manifest.json"
+  ( cd "$native" && sha256sum Panel.qml Model.js manifest.json ) >"$FIXTURE_ROOT/upstream.sha256"
+  EXTRA_ENV+=("DOTFILES_DISPLAY_NATIVE_DIR=$native" "DOTFILES_DISPLAY_SIGNATURES=$FIXTURE_ROOT/upstream.sha256")
+  invoke '' 1 --host omarchy --components omarchy-display --yes
+  err_contains 'unmanaged Display plugin'
+  file_contains "$FIXTURE_HOME/.config/omarchy/plugins/guisaliba.monitor/manifest.json" 'unmanaged'
 }
 
-test_omarchy_power
+test_display_component
 
 # --- Helper safety ---
 

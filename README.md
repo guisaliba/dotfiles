@@ -16,11 +16,11 @@ devices. The OpenCode agentic setup is provided by the public
 - Editors: VSCode, Zed
 - Agent harness: OpenCode with [ai-memory](https://github.com/akitaonrails/ai-memory) continuity, provided by [`guisaliba/agents`](https://github.com/guisaliba/agents)
 
-The Omarchy clamshell power-management setup is in [`omarchy/`](omarchy/README.md). Apply it only on a workstation that is used with its lid closed and an external display.
+The optional Display layout enhancement and other Omarchy customizations are documented in [`omarchy/`](omarchy/README.md).
 
 ## Installer
 
-`install.sh` is the workstation entry point. It reads the component manifest in `components.tsv`, expands each target inside your home directory, copies files atomically, replaces the wallpaper tree, merges the marked alias block, installs selected VS Code extensions, clones or updates the public `guisaliba/agents` repository into a managed checkout, and runs the Omarchy power-management script when the host is Omarchy.
+`install.sh` is the workstation entry point. It reads the component manifest in `components.tsv`, expands each target inside your home directory, copies files atomically, replaces the wallpaper tree, merges the marked alias block, installs selected VS Code extensions, clones or updates the public `guisaliba/agents` repository into a managed checkout, and can install the optional Omarchy Display enhancement.
 
 Run the script from the repository root:
 
@@ -35,7 +35,7 @@ Supported options:
 - `--check`: report the detected host, selected components, sources, targets, required backups, missing prerequisites, and network, service, or root actions. It performs no writes, clone, fetch, extension install, command, service, or sudo action.
 - `--components NAMES`: select only the named components and skip the guided checklist.
 - `--host HOST`: `linux`, `wsl2`, or `omarchy`. It overrides host detection only.
-- `--yes`: skip the apply confirmation. It is valid only with `--components`. It never adds components and never bypasses the separate agents or Omarchy risk confirmation.
+- `--yes`: skip the apply confirmation. It is valid only with `--components`. It never adds components and never bypasses the separate agents risk confirmation.
 - `--vscode-extensions VALUE`: `all`, `none`, or a comma-separated list of tracked extension identifiers.
 - `--help`: show the usage.
 
@@ -43,7 +43,7 @@ The script is a UI and orchestrator only. Safe file operations live in `lib/dotf
 
 ## Components
 
-The order and metadata come from `components.tsv`. Component names: `bash`, `git`, `wallpapers`, `starship`, `vscode`, `zed`, `agents`, and `omarchy-power`. `bashrc` is not selectable alone; on WSL2 it is applied as part of `bash`.
+The order and metadata come from `components.tsv`. Component names: `bash`, `git`, `wallpapers`, `starship`, `vscode`, `zed`, `agents`, and `omarchy-display`. `bashrc` is not selectable alone; on WSL2 it is applied as part of `bash`.
 
 | Component | What it does | Risk gate |
 | --- | --- | --- |
@@ -55,7 +55,7 @@ The order and metadata come from `components.tsv`. Component names: `bash`, `git
 | `vscode` | Copies `vscode/settings.json` and installs the selected extensions from `vscode/extensions.tsv` with `code --install-extension`. It stops at the first extension failure. | None |
 | `zed` | Copies `zed/.config/settings.json` and `keymap.json` to `~/.config/zed/`. The source settings contain no `wsl_connections`. | None |
 | `agents` | Clones or fast-forwards the public `guisaliba/agents` repository into `~/.local/share/dotfiles/agents`, then runs its `apply.sh` and `test.sh`. | Network and service confirmation |
-| `omarchy-power` | Runs `omarchy/apply-power-management.sh` with sudo. It is applicable only on Omarchy. | Root-power confirmation |
+| `omarchy-display` | Installs a user-owned enhancement of Omarchy's Display widget with confirmed positioning and rotation. It checks the packaged Display contract before activation. | Normal confirmation |
 
 ## Backups
 
@@ -69,7 +69,7 @@ The managed checkout must be a clean Git worktree on the `main` branch with an a
 
 ## Risk gates
 
-`--yes` answers the component selection confirmation only. The agents and Omarchy components still show a separate confirmation before they run, because they change the system. The agents confirmation lists the package installs, network scripts, global OpenCode changes, ai-memory service changes, Learn update, skill update, and Bash merge. The Omarchy confirmation lists the two `/etc` targets, sudo, the logind reload, the udev reload, and the clamshell change. Omarchy-power never runs `mx-mini-recover.sh`.
+`--yes` answers the component selection confirmation only. The agents component still shows a separate confirmation before it runs, because it changes services and installs software. Its confirmation lists package installs, network scripts, global OpenCode changes, ai-memory service changes, Learn update, skill update, and Bash merge.
 
 ## Verification
 
