@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: bash -n install.sh test.sh omarchy/apply-power-management.sh omarchy/mx-mini-recover.sh
-      - run: python3 -m py_compile lib/dotfiles_installer.py
+      - run: bash -n install.sh test.sh omarchy/mx-mini-recover.sh
+      - run: python3 -m py_compile lib/dotfiles_installer.py omarchy/install-display.py omarchy/display-plugin/layout.py omarchy/test-display.py
+      - run: python3 -B omarchy/test-display.py
       - run: ./test.sh --repo-only

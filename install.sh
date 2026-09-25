@@ -39,7 +39,6 @@ if [[ "$TEST_MODE" == 1 ]]; then
   AGENTS_REPOSITORY_URL="${DOTFILES_AGENTS_URL:-https://github.com/guisaliba/agents}"
   AGENTS_REMOTE_IDENTITY="${DOTFILES_AGENTS_REMOTE:-github.com/guisaliba/agents}"
   AGENTS_CHECKOUT_DIR="${DOTFILES_AGENTS_CHECKOUT:-$HOME/.local/share/dotfiles/agents}"
-  OMARCHY_APPLY_SCRIPT="${DOTFILES_OMARCHY_APPLY:-$REPO_DIR/omarchy/apply-power-management.sh}"
 else
   PROC_DIR="/proc"
   ETC_DIR="/etc"
@@ -47,7 +46,6 @@ else
   AGENTS_REPOSITORY_URL="https://github.com/guisaliba/agents"
   AGENTS_REMOTE_IDENTITY="github.com/guisaliba/agents"
   AGENTS_CHECKOUT_DIR="$HOME/.local/share/dotfiles/agents"
-  OMARCHY_APPLY_SCRIPT="$REPO_DIR/omarchy/apply-power-management.sh"
 fi
 
 BACKUP_ROOT="$STATE_DIR/backups"
@@ -515,7 +513,7 @@ component_status() {
         printf 'equal\n'
       fi
       ;;
-    agents|omarchy-power)
+    agents|omarchy-display)
       printf 'n/a\n'
       ;;
   esac
@@ -659,26 +657,6 @@ run_agents_component() {
   }
 }
 
-run_omarchy_power_component() {
-  printf '\nOmarchy power management component:\n'
-  printf '  Runs %s with sudo.\n' "$OMARCHY_APPLY_SCRIPT"
-  printf '  It will:\n'
-  printf '    - write /etc/systemd/logind.conf.d/90-dotfiles-clamshell.conf\n'
-  printf '    - write /etc/udev/rules.d/91-dotfiles-bluetooth-wakeup.rules\n'
-  printf '    - use sudo\n'
-  printf '    - reload systemd-logind\n'
-  printf '    - reload udev rules\n'
-  printf '    - enable Bluetooth wake for clamshell use\n'
-  if ! confirm_yesno 'Run the Omarchy power management apply now?'; then
-    printf 'Skipped the Omarchy power management apply.\n'
-    return 2
-  fi
-  bash "$OMARCHY_APPLY_SCRIPT" || {
-    printf 'ERROR: Omarchy power management apply failed\n' >&2
-    return 1
-  }
-}
-
 run_vscode_component() {
   local backup_root="$1" target="$2"
   local -a backup_args=()
@@ -756,8 +734,8 @@ apply_component() {
     agents)
       run_agents_component
       ;;
-    omarchy-power)
-      run_omarchy_power_component
+    omarchy-display)
+      python3 "$REPO_DIR/omarchy/install-display.py" apply
       ;;
   esac
 }
@@ -876,16 +854,11 @@ run_check() {
           errors=$((errors + 1))
         fi
         ;;
-      omarchy-power)
-        printf '  action: omarchy-power\n  source: %s\n  target: (system paths)\n' "$source_rel"
-        printf '  required backup: no\n'
-        if command -v sudo >/dev/null 2>&1; then
-          printf '  missing prerequisite: none\n'
-        else
-          printf '  missing prerequisite: sudo command is missing\n'
+      omarchy-display)
+        printf '  action: omarchy-display\n  source: %s\n  target: %s\n' "$source_rel" "$target"
+        if ! python3 "$REPO_DIR/omarchy/install-display.py" check; then
+          errors=$((errors + 1))
         fi
-        printf '  network action: none\n  service action: none\n'
-        printf '  root action: sudo writes /etc/systemd/logind.conf.d/90-dotfiles-clamshell.conf and /etc/udev/rules.d/91-dotfiles-bluetooth-wakeup.rules, reloads logind and udev\n'
         ;;
     esac
   done

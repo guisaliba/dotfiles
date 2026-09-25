@@ -4,6 +4,7 @@
 
 - This repository stores selectively applied dotfiles. `install.sh` is the workstation entry point and applies components from `components.tsv`. It expands every target inside `$HOME`, preserves unrelated shell content, and never overwrites a file that is not a documented managed target. The agent-stack apply script owns only its marked OpenCode block in `~/.bash_aliases`.
 - Root `AGENTS.md` guides work in this repository. The public [`guisaliba/agents`](https://github.com/guisaliba/agents) repository owns the canonical OpenCode global instruction payload copied to `~/.config/opencode/AGENTS.md`.
+- `omarchy-display` installs `omarchy/display-plugin/` only when the packaged Display contract matches `omarchy/display-upstream.sha256`. The built-in `omarchy.monitor` stays installed; its bar and shortcut calls route to the enabled `guisaliba.monitor` clone. Keep native brightness, scale, text size, toggle, keyboard, pointer, and IPC behavior. The layout helper owns only its marked block in `~/.config/hypr/monitors.lua`.
 - Keep managed repository sources distinct from materialized files under `$HOME`; do not edit or overwrite home-directory targets unless explicitly asked.
 
 ## Root Installer
@@ -15,7 +16,7 @@
 - `vscode/extensions.tsv` is the source of truth for tracked VS Code extensions. `vscode/EXTENSIONS.md` is human documentation.
 - `--check` performs no writes, clone, fetch, extension install, command, service, or sudo action. A component failure stops later components, and the final message lists completed and failed components.
 - Backups use one UTC run id under `~/.local/state/dotfiles/backups/<id>/`, mirroring the absolute target path without the leading slash. There is no backup when the target is equal, and no run directory in `--check`.
-- Risk gates: the agents component is a network and service action and shows a separate confirmation before running. The omarchy-power component shows a separate root-power confirmation and runs only on Omarchy. `--yes` never bypasses these separate confirmations. Omarchy-power never runs `mx-mini-recover.sh`.
+- Risk gates: the agents component is a network and service action and shows a separate confirmation before running. `--yes` never bypasses this separate confirmation.
 
 ## Agent Stack
 
@@ -42,4 +43,5 @@
 - Use `~/.local/share/dotfiles/agents/test.sh --repo-only` for deterministic merge, idempotence, safe-failure, and private-file fixtures without current-machine assertions.
 - `./test.sh --repo-only` is the deterministic root-installer fixture suite. It uses temporary HOME and repository fixtures only, never modifies a real home directory, and never contacts GitHub.
 - The agent apply is a network and service action. Do not run it as a read-only verification step. Run the managed `~/.local/share/dotfiles/agents/test.sh --repo-only` and `./test.sh --repo-only` instead.
-- For syntax-only checks that avoid machine-state assertions, use `bash -n install.sh test.sh omarchy/apply-power-management.sh omarchy/mx-mini-recover.sh` and `python3 -m py_compile lib/dotfiles_installer.py`.
+- For syntax-only checks that avoid machine-state assertions, use `bash -n install.sh test.sh omarchy/mx-mini-recover.sh` and `python3 -m py_compile lib/dotfiles_installer.py omarchy/install-display.py omarchy/display-plugin/layout.py omarchy/test-display.py`.
+- After Display changes, run `python3 -B omarchy/test-display.py` and `./test.sh --repo-only`. On Omarchy, also run `qmllint omarchy/display-plugin/Panel.qml` and `omarchy plugin validate omarchy/display-plugin`.

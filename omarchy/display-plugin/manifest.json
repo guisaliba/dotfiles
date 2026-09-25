@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "guisaliba.monitor",
+  "name": "Display Layout",
+  "version": "1.0.0",
+  "author": "Guilherme Saliba",
+  "description": "Display controls with confirmed layout and orientation",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Display Layout",
+    "description": "Native Display controls with layout and orientation",
+    "category": "System",
+    "allowMultiple": false
+  },
+  "omarchy": {
+    "clonedFrom": "omarchy.monitor"
+  }
+}

@@ -34,7 +34,7 @@ VALID_ACTIONS = {
     "vscode",
     "zed",
     "agents",
-    "omarchy-power",
+    "omarchy-display",
 }
 VALID_HOSTS = {"linux", "wsl2", "omarchy"}
 VALID_RISKS = {"normal", "network-service", "root-power"}
@@ -47,7 +47,7 @@ KNOWN_COMPONENTS = {
     "vscode",
     "zed",
     "agents",
-    "omarchy-power",
+    "omarchy-display",
 }
 EXPECTED_COMPONENT_ORDER = (
     "bash",
@@ -58,7 +58,7 @@ EXPECTED_COMPONENT_ORDER = (
     "vscode",
     "zed",
     "agents",
-    "omarchy-power",
+    "omarchy-display",
 )
 ACTION_BY_COMPONENT = {
     "bash": "merge-block",
@@ -69,7 +69,7 @@ ACTION_BY_COMPONENT = {
     "vscode": "vscode",
     "zed": "zed",
     "agents": "agents",
-    "omarchy-power": "omarchy-power",
+    "omarchy-display": "omarchy-display",
 }
 APPROVED_AGENTS_SOURCE = "https://github.com/guisaliba/agents"
 EXPECTED_HOSTS = {
@@ -81,7 +81,7 @@ EXPECTED_HOSTS = {
     "vscode": "linux,wsl2,omarchy",
     "zed": "linux,wsl2,omarchy",
     "agents": "linux,wsl2,omarchy",
-    "omarchy-power": "omarchy",
+    "omarchy-display": "omarchy",
 }
 EXPECTED_DEFAULTS = {
     "bash": "yes",
@@ -92,7 +92,7 @@ EXPECTED_DEFAULTS = {
     "vscode": "no",
     "zed": "no",
     "agents": "no",
-    "omarchy-power": "no",
+    "omarchy-display": "no",
 }
 EXPECTED_RISKS = {
     "bash": "normal",
@@ -103,7 +103,7 @@ EXPECTED_RISKS = {
     "vscode": "normal",
     "zed": "normal",
     "agents": "network-service",
-    "omarchy-power": "root-power",
+    "omarchy-display": "normal",
 }
 
 
@@ -444,11 +444,11 @@ def validate_manifest_row(
             target.startswith("~/") or target == "~" or target.startswith("/")
         ):
             fail(f"unsafe manifest agents target at {path}:{line_number}: {target}")
-    elif action == "omarchy-power":
+    elif action == "omarchy-display":
         if not source or os.path.isabs(source) or ".." in Path(source).parts:
             fail(f"unsafe manifest source at {path}:{line_number}: {source}")
-        if target:
-            fail(f"manifest omarchy-power target must be empty at {path}:{line_number}")
+        if source != "omarchy/display-plugin" or target != "~/.config/omarchy/plugins/guisaliba.monitor":
+            fail(f"invalid omarchy-display source or target at {path}:{line_number}")
 
 
 def op_manifest(path_text):

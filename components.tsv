@@ -8,4 +8,4 @@ starship	copy-file	starship/starship.toml	~/.config/starship.toml	linux,wsl2,oma
 vscode	vscode	vscode/settings.json	~/.config/Code/User/settings.json	linux,wsl2,omarchy	no	normal
 zed	zed	zed/.config	~/.config/zed/	linux,wsl2,omarchy	no	normal
 agents	agents	https://github.com/guisaliba/agents	~/.local/share/dotfiles/agents	linux,wsl2,omarchy	no	network-service
-omarchy-power	omarchy-power	omarchy/apply-power-management.sh		omarchy	no	root-power
+omarchy-display	omarchy-display	omarchy/display-plugin	~/.config/omarchy/plugins/guisaliba.monitor	omarchy	no	normal
