@@ -3,12 +3,11 @@
  * Why this exists:
  * This vault sets accentColor #050505 in .obsidian/appearance.json.
  * Link text rendered near-black on a dark background and became
- * invisible. Likely cause (hypothesis, not confirmed): the core
- * --link-color default derives from the accent color. The official
- * docs (Editor/Link.md) list the link variables but state no default
- * values, so this cause is not verified. Confirmation test: set the
- * accent color to white; if the link colors change, the accent drives
- * them.
+ * invisible. Confirmed cause: the core --link-color default derives
+ * from the accent color. Verified 2026-10-12 by controlled test: with
+ * this snippet off, changing the accent color in Settings > Appearance
+ * changed the link color to match it. The accent was #050505 (near
+ * black), so link text was invisible on the dark background.
  * This snippet sets the documented link color variables to visible
  * values. Snippet CSS loads after the theme CSS, so these values beat
  * the theme defaults.
