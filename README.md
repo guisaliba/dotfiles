@@ -56,7 +56,7 @@ The order and metadata come from `components.tsv`. Component names: `bash`, `git
 | `zed` | Copies `zed/.config/settings.json` and `keymap.json` to `~/.config/zed/`. The source settings contain no `wsl_connections`. | None |
 | `agents` | Clones or fast-forwards the public `guisaliba/agents` repository into `~/.local/share/dotfiles/agents`, then runs its `apply.sh` and `test.sh`. | Network and service confirmation |
 | `omarchy-display` | Installs a user-owned enhancement of Omarchy's Display widget with confirmed positioning and rotation. It checks the packaged Display contract before activation. | Normal confirmation |
-| `obsidian` | Copies `obsidian/snippets/link-colors.css` to `~/brain/.obsidian/snippets/link-colors.css` in the brain vault. It sets visible link colors for dark and light themes. | None |
+| `obsidian` | Copies `obsidian/snippets/link-colors.css` to `~/brain/.obsidian/snippets/link-colors.css` in the brain vault. It sets visible link colors for dark and light themes. See `obsidian/README.md` for the tracking policy and documented plugin toggles. | None |
 
 ## Backups
 
