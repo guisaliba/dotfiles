@@ -24,30 +24,30 @@
  */
 
 /* Dark themes: the primary target.
- * Resolved internal links are warm white, brighter than body text
- * (#CECDC3 in minimal-flexoki-dark). External links are light teal.
- * Unresolved links are warm gray with a dashed underline. */
+ * The user confirmed this palette on a rendered swatch card
+ * (2026-10-12). Note links and web links share the pastel white so
+ * every link is visible; dead links keep the warm gray and dashes. */
 .theme-dark {
-  --link-color: #EDEBE6;
+  --link-color: #F2EFE9;
   --link-color-hover: #FFFFFF;
 
-  --link-external-color: #6FC2B8;
-  --link-external-color-hover: #96D8D0;
+  --link-external-color: #F2EFE9;
+  --link-external-color-hover: #FFFFFF;
 
-  --link-unresolved-color: #8F8C85;
+  --link-unresolved-color: #B5AFA6;
   --link-unresolved-opacity: 1;
   --link-unresolved-decoration-style: dashed;
-  --link-unresolved-decoration-color: #8F8C85;
+  --link-unresolved-decoration-color: #B5AFA6;
 }
 
-/* Light themes: the same three roles with dark values, so this
- * snippet never hides links in light mode. */
+/* Light themes: the same roles with dark values, so this snippet
+ * never hides links in light mode. Same uniform logic as dark. */
 .theme-light {
   --link-color: #3D3A34;
   --link-color-hover: #1F1D1A;
 
-  --link-external-color: #1E6E66;
-  --link-external-color-hover: #14544E;
+  --link-external-color: #3D3A34;
+  --link-external-color-hover: #1F1D1A;
 
   --link-unresolved-color: #7A776F;
   --link-unresolved-opacity: 1;
