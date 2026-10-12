@@ -1,0 +1,81 @@
+/* link-colors.css - Obsidian link color snippet
+ *
+ * Why this exists:
+ * This vault sets accentColor #050505 in .obsidian/appearance.json.
+ * The core --link-color default derives from the accent color, so link
+ * text rendered near-black on a dark background and became invisible.
+ * This snippet sets the documented link color variables to visible
+ * values. Snippet CSS loads after the theme CSS, so these values win.
+ *
+ * Documented variables (obsidianmd/obsidian-developer-docs,
+ * en/Reference/CSS variables/Editor/Link.md):
+ *   --link-color              resolved internal link text color
+ *   --link-unresolved-color   unresolved internal link text color
+ *   --link-external-color     external link text color
+ *
+ * Source of truth: ~/dotfiles/obsidian/snippets/link-colors.css
+ * Materialized to: ~/brain/.obsidian/snippets/link-colors.css
+ */
+
+/* Dark themes: the primary target.
+ * Resolved internal links are warm white, brighter than body text
+ * (#CECDC3 in minimal-flexoki-dark). External links are light teal.
+ * Unresolved links are warm gray with a dashed underline. */
+.theme-dark {
+  --link-color: #EDEBE6;
+  --link-color-hover: #FFFFFF;
+
+  --link-external-color: #6FC2B8;
+  --link-external-color-hover: #96D8D0;
+
+  --link-unresolved-color: #8F8C85;
+  --link-unresolved-opacity: 1;
+  --link-unresolved-decoration-style: dashed;
+  --link-unresolved-decoration-color: #8F8C85;
+}
+
+/* Light themes: the same three roles with dark values, so this
+ * snippet never hides links in light mode. */
+.theme-light {
+  --link-color: #3D3A34;
+  --link-color-hover: #1F1D1A;
+
+  --link-external-color: #1E6E66;
+  --link-external-color-hover: #14544E;
+
+  --link-unresolved-color: #7A776F;
+  --link-unresolved-opacity: 1;
+  --link-unresolved-decoration-style: dashed;
+  --link-unresolved-decoration-color: #7A776F;
+}
+
+/* Reading view fallbacks.
+ * These force the colors even if a theme hard-codes a color instead of
+ * using the variables. The !important flags are deliberate: this
+ * snippet cannot measure selector specificity against every theme. */
+.markdown-preview-view a.internal-link {
+  color: var(--link-color) !important;
+}
+.markdown-preview-view a.internal-link:hover {
+  color: var(--link-color-hover) !important;
+}
+.markdown-preview-view a.internal-link.is-unresolved {
+  color: var(--link-unresolved-color) !important;
+}
+.markdown-preview-view a.external-link {
+  color: var(--link-external-color) !important;
+}
+.markdown-preview-view a.external-link:hover {
+  color: var(--link-external-color-hover) !important;
+}
+
+/* Editor fallbacks for markdown-style links [text](url).
+ * No rule for .cm-hmd-internal-link here on purpose: the core marks
+ * resolved and unresolved wikilinks through the variables above, and a
+ * blunt color rule would recolor unresolved wikilinks as resolved. */
+.markdown-source-view.mod-cm6 span.cm-link {
+  color: var(--link-color) !important;
+}
+.markdown-source-view.mod-cm6 span.cm-url {
+  color: var(--link-external-color) !important;
+}

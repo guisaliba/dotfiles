@@ -43,7 +43,7 @@ The script is a UI and orchestrator only. Safe file operations live in `lib/dotf
 
 ## Components
 
-The order and metadata come from `components.tsv`. Component names: `bash`, `git`, `wallpapers`, `starship`, `vscode`, `zed`, `agents`, and `omarchy-display`. `bashrc` is not selectable alone; on WSL2 it is applied as part of `bash`.
+The order and metadata come from `components.tsv`. Component names: `bash`, `git`, `wallpapers`, `starship`, `vscode`, `zed`, `agents`, `omarchy-display`, and `obsidian`. `bashrc` is not selectable alone; on WSL2 it is applied as part of `bash`.
 
 | Component | What it does | Risk gate |
 | --- | --- | --- |
@@ -56,6 +56,7 @@ The order and metadata come from `components.tsv`. Component names: `bash`, `git
 | `zed` | Copies `zed/.config/settings.json` and `keymap.json` to `~/.config/zed/`. The source settings contain no `wsl_connections`. | None |
 | `agents` | Clones or fast-forwards the public `guisaliba/agents` repository into `~/.local/share/dotfiles/agents`, then runs its `apply.sh` and `test.sh`. | Network and service confirmation |
 | `omarchy-display` | Installs a user-owned enhancement of Omarchy's Display widget with confirmed positioning and rotation. It checks the packaged Display contract before activation. | Normal confirmation |
+| `obsidian` | Copies `obsidian/snippets/link-colors.css` to `~/brain/.obsidian/snippets/link-colors.css` in the brain vault. It sets visible link colors for dark and light themes. | None |
 
 ## Backups
 

@@ -48,6 +48,7 @@ KNOWN_COMPONENTS = {
     "zed",
     "agents",
     "omarchy-display",
+    "obsidian",
 }
 EXPECTED_COMPONENT_ORDER = (
     "bash",
@@ -59,6 +60,7 @@ EXPECTED_COMPONENT_ORDER = (
     "zed",
     "agents",
     "omarchy-display",
+    "obsidian",
 )
 ACTION_BY_COMPONENT = {
     "bash": "merge-block",
@@ -70,6 +72,7 @@ ACTION_BY_COMPONENT = {
     "zed": "zed",
     "agents": "agents",
     "omarchy-display": "omarchy-display",
+    "obsidian": "copy-file",
 }
 APPROVED_AGENTS_SOURCE = "https://github.com/guisaliba/agents"
 EXPECTED_HOSTS = {
@@ -82,6 +85,7 @@ EXPECTED_HOSTS = {
     "zed": "linux,wsl2,omarchy",
     "agents": "linux,wsl2,omarchy",
     "omarchy-display": "omarchy",
+    "obsidian": "linux,wsl2,omarchy",
 }
 EXPECTED_DEFAULTS = {
     "bash": "yes",
@@ -93,6 +97,7 @@ EXPECTED_DEFAULTS = {
     "zed": "no",
     "agents": "no",
     "omarchy-display": "no",
+    "obsidian": "no",
 }
 EXPECTED_RISKS = {
     "bash": "normal",
@@ -104,6 +109,7 @@ EXPECTED_RISKS = {
     "zed": "normal",
     "agents": "network-service",
     "omarchy-display": "normal",
+    "obsidian": "normal",
 }
 
 
