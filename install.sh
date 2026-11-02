@@ -10,7 +10,8 @@ set -Eeuo pipefail
 #
 # Usage:
 #   ./install.sh [--check] [--components NAMES] [--host HOST]
-#                [--yes] [--vscode-extensions VALUE] [--help]
+#                [--yes] [--vscode-extensions VALUE] [--agents-branch BRANCH]
+#                [--help]
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$SCRIPT_DIR"
@@ -50,6 +51,7 @@ fi
 
 BACKUP_ROOT="$STATE_DIR/backups"
 AGENTS_BRANCH="main"
+AGENTS_BRANCH_SET=0
 
 CHECK_MODE=0
 YES_MODE=0
@@ -90,6 +92,8 @@ Options:
   --host HOST                   linux, wsl2, or omarchy (override detection)
   --yes                         Skip the apply confirmation; valid only with --components
   --vscode-extensions VALUE     all, none, or comma-separated tracked extension IDs
+  --agents-branch BRANCH        Use this guisaliba/agents branch instead of main;
+                                valid only when the agents component is selected
   --help                        Show this help
 EOF
 }
@@ -181,6 +185,21 @@ parse_args() {
         [[ -n "$VSCODE_EXT_ARG" ]] || usage_error "--vscode-extensions requires a value"
         shift 2
         ;;
+      --agents-branch)
+        if [[ "$AGENTS_BRANCH_SET" -eq 1 ]]; then
+          usage_error "duplicate option: --agents-branch"
+        fi
+        AGENTS_BRANCH_SET=1
+        if [[ $# -lt 2 ]]; then
+          usage_error "--agents-branch requires a branch name"
+        fi
+        AGENTS_BRANCH="$2"
+        if [[ -z "$AGENTS_BRANCH" ]] || [[ "$AGENTS_BRANCH" == -* ]] || \
+          ! git check-ref-format --branch "$AGENTS_BRANCH" >/dev/null 2>&1; then
+          usage_error "invalid --agents-branch: $AGENTS_BRANCH"
+        fi
+        shift 2
+        ;;
       --help)
         if [[ "$seen_help" -eq 1 ]]; then
           usage_error "duplicate option: --help"
@@ -206,6 +225,9 @@ parse_args() {
   fi
   if [[ "$VSCODE_EXT_SET" -eq 1 && "$COMPONENTS_SET" -eq 0 ]]; then
     usage_error "--vscode-extensions is valid only with --components"
+  fi
+  if [[ "$AGENTS_BRANCH_SET" -eq 1 && "$COMPONENTS_SET" -eq 0 ]]; then
+    usage_error "--agents-branch is valid only with --components"
   fi
 }
 
@@ -413,6 +435,9 @@ resolve_selection() {
         SELECTED+=("$comp")
       fi
     done
+    if [[ "$AGENTS_BRANCH_SET" -eq 1 ]]; then
+      contains agents "${SELECTED[@]}" || usage_error "--agents-branch requires agents to be a selected component"
+    fi
     if [[ "$VSCODE_EXT_SET" -eq 1 ]]; then
       contains vscode "${SELECTED[@]}" || usage_error "--vscode-extensions requires vscode to be a selected component"
       case "$VSCODE_EXT_ARG" in
@@ -565,26 +590,53 @@ agents_checkout_inspect() {
       "$AGENTS_REMOTE_IDENTITY" "$remote" >&2
     return 1
   fi
-  branch="$(git -C "$checkout" branch --show-current 2>/dev/null || true)"
-  if [[ "$branch" != "$AGENTS_BRANCH" ]]; then
-    printf 'invalid\n'
-    printf 'ERROR: agents checkout must use branch %s (found %s)\n' \
-      "$AGENTS_BRANCH" "${branch:-detached}" >&2
-    return 1
-  fi
   dirty="$(git -C "$checkout" status --porcelain --untracked-files=all 2>/dev/null || true)"
   if [[ -n "$dirty" ]]; then
     printf 'invalid\n'
     printf 'ERROR: agents checkout has uncommitted changes; refusing to update\n' >&2
     return 1
   fi
+  branch="$(git -C "$checkout" branch --show-current 2>/dev/null || true)"
+  if [[ "$branch" != "$AGENTS_BRANCH" ]]; then
+    # An explicit --agents-branch may move a clean managed checkout between
+    # branches. Without it, a branch mismatch is an error, so a checkout that
+    # was switched for testing is never silently moved back.
+    if [[ "$AGENTS_BRANCH_SET" -eq 1 && -n "$branch" ]]; then
+      printf 'switch\n'
+      return 0
+    fi
+    printf 'invalid\n'
+    printf 'ERROR: agents checkout must use branch %s (found %s). Pass --agents-branch %s to switch a clean checkout.\n' \
+      "$AGENTS_BRANCH" "${branch:-detached}" "$AGENTS_BRANCH" >&2
+    return 1
+  fi
   printf 'clean\n'
+}
+
+agents_fetch_branch() {
+  # The managed clone is single-branch, so name the refspec explicitly. That
+  # keeps refs/remotes/origin/<branch> current for any selected branch.
+  git -C "$AGENTS_CHECKOUT_DIR" fetch --prune origin \
+    "+refs/heads/$AGENTS_BRANCH:refs/remotes/origin/$AGENTS_BRANCH"
+}
+
+agents_checkout_switch() {
+  printf 'Switching the managed checkout to %s\n' "$AGENTS_BRANCH"
+  agents_fetch_branch || {
+    printf 'ERROR: git fetch failed for branch %s of the agents checkout\n' "$AGENTS_BRANCH" >&2
+    return 1
+  }
+  git -C "$AGENTS_CHECKOUT_DIR" checkout -B "$AGENTS_BRANCH" "refs/remotes/origin/$AGENTS_BRANCH" || {
+    printf 'ERROR: could not check out %s in the agents checkout\n' "$AGENTS_BRANCH" >&2
+    return 1
+  }
+  git -C "$AGENTS_CHECKOUT_DIR" branch --set-upstream-to="origin/$AGENTS_BRANCH" "$AGENTS_BRANCH" >/dev/null 2>&1 || true
 }
 
 agents_checkout_update() {
   printf 'Fetching origin/%s\n  git -C %s fetch --prune origin %s\n' \
     "$AGENTS_BRANCH" "$AGENTS_CHECKOUT_DIR" "$AGENTS_BRANCH"
-  git -C "$AGENTS_CHECKOUT_DIR" fetch --prune origin "$AGENTS_BRANCH" || {
+  agents_fetch_branch || {
     printf 'ERROR: git fetch failed for the agents checkout\n' >&2
     return 1
   }
@@ -614,13 +666,14 @@ run_agents_component() {
   printf '  This component clones or updates %s and then runs apply.sh and test.sh in the checkout.\n' \
     "$AGENTS_REPOSITORY_URL"
   printf '  apply.sh will:\n'
-  printf '    - install or update packages (OpenCode, ai-memory, RTK, Plannotator)\n'
+  printf '  Branch: %s\n' "$AGENTS_BRANCH"
+  printf '  apply.sh will (see the README of that branch for the exact list):\n'
+  printf '    - install or update the agent harness and its plugins, ai-memory, and RTK\n'
   printf '    - run network install scripts\n'
-  printf '    - change global OpenCode configuration\n'
+  printf '    - change global agent harness configuration\n'
   printf '    - start or restart the ai-memory user service\n'
-  printf '    - update the managed OpenCode Learn checkout\n'
   printf '    - install or update agent skills\n'
-  printf '    - merge a marked block into ~/.bash_aliases\n'
+  printf '    - merge marked blocks into ~/.bash_aliases and ~/.bash_profile\n'
   if ! confirm_yesno 'Run the agent stack apply now?'; then
     printf 'Skipped the agent stack apply.\n'
     return 2
@@ -642,6 +695,8 @@ run_agents_component() {
       printf 'ERROR: could not check out %s in the agents checkout\n' "$AGENTS_BRANCH" >&2
       return 1
     }
+  elif [[ "$status" == switch ]]; then
+    agents_checkout_switch || return 1
   else
     agents_checkout_update || return 1
   fi
@@ -843,6 +898,9 @@ run_check() {
             printf '  required backup: no\n  missing prerequisite: none\n'
             printf '  network action: clone would occur: git clone --branch %s --single-branch %s %s\n' \
               "$AGENTS_BRANCH" "$AGENTS_REPOSITORY_URL" "$AGENTS_CHECKOUT_DIR"
+          elif [[ "$status" == switch ]]; then
+            printf '  required backup: no\n  missing prerequisite: none\n'
+            printf '  network action: fetch origin/%s, switch the clean checkout to it; run apply.sh and test.sh\n' "$AGENTS_BRANCH"
           else
             printf '  required backup: no\n  missing prerequisite: none\n'
             printf '  network action: fetch origin/%s then fast-forward; run apply.sh and test.sh\n' "$AGENTS_BRANCH"
