@@ -4,7 +4,7 @@ Personal dotfiles for my Linux development environment.
 
 This repository is my portable workstation setup. It tracks shell, editor,
 prompt, and other development configuration that I can replicate across
-devices. The OpenCode agentic setup is provided by the public
+devices. The Claude Code + pstack agentic setup is provided by the public
 [`guisaliba/agents`](https://github.com/guisaliba/agents) repository.
 
 ## Target setup
@@ -14,7 +14,7 @@ devices. The OpenCode agentic setup is provided by the public
 - Terminal: Alacritty
 - Prompt: Starship
 - Editors: VSCode, Zed
-- Agent harness: OpenCode with [ai-memory](https://github.com/akitaonrails/ai-memory) continuity, provided by [`guisaliba/agents`](https://github.com/guisaliba/agents)
+- Agent harness: Claude Code with the pstack workflow, OpenCode Go workers, and [ai-memory](https://github.com/akitaonrails/ai-memory) continuity, provided by [`guisaliba/agents`](https://github.com/guisaliba/agents)
 
 The optional Display layout enhancement and other Omarchy customizations are documented in [`omarchy/`](omarchy/README.md).
 
@@ -47,14 +47,14 @@ The order and metadata come from `components.tsv`. Component names: `bash`, `git
 
 | Component | What it does | Risk gate |
 | --- | --- | --- |
-| `bash` | Merges the marked block from `bash/aliases.bash` into `~/.bash_aliases`, preserving unrelated content and the OpenCode wrapper block. | None |
+| `bash` | Merges the marked block from `bash/aliases.bash` into `~/.bash_aliases`, preserving unrelated content and the agent-stack wrapper block. | None |
 | `bashrc` | Copies `bash/wsl/.bashrc` to `~/.bashrc` on WSL2. | None |
 | `git` | Copies `git/.gitconfig` to `~/.gitconfig`. It never asks for an identity. | None |
 | `wallpapers` | Replaces `~/Pictures/wallpapers` with the tracked tree, excluding `README.md`, preserving categories and modes. | None |
 | `starship` | Copies `starship/starship.toml` to `~/.config/starship.toml`. It copies even when the binary is absent and warns only. | None |
 | `vscode` | Copies `vscode/settings.json` and installs the selected extensions from `vscode/extensions.tsv` with `code --install-extension`. It stops at the first extension failure. | None |
 | `zed` | Copies `zed/.config/settings.json` and `keymap.json` to `~/.config/zed/`. The source settings contain no `wsl_connections`. | None |
-| `agents` | Clones or fast-forwards the public `guisaliba/agents` repository into `~/.local/share/dotfiles/agents`, then runs its `apply.sh` and `test.sh`. | Network and service confirmation |
+| `agents` | Clones or fast-forwards the public `guisaliba/agents` repository into `~/.local/share/dotfiles/agents`, then runs its `apply.sh` and `test.sh`. `--agents-branch BRANCH` selects another branch. | Network and service confirmation |
 | `omarchy-display` | Installs a user-owned enhancement of Omarchy's Display widget with confirmed positioning and rotation. It checks the packaged Display contract before activation. | Normal confirmation |
 | `obsidian` | Copies `obsidian/snippets/link-colors.css` to `~/brain/.obsidian/snippets/link-colors.css` in the brain vault. It sets visible link colors for dark and light themes. See `obsidian/README.md` for the tracking policy and documented plugin toggles. | None |
 
@@ -64,13 +64,21 @@ Before a file or tree changes, the installer writes a backup under `~/.local/sta
 
 ## Agents
 
-The public [guisaliba/agents](https://github.com/guisaliba/agents) repository is the standalone source of the OpenCode agent stack. `install.sh` manages its clone at `~/.local/share/dotfiles/agents`. The agents component is a network and service action: its `apply.sh` installs packages, runs network install scripts, changes global OpenCode configuration, starts or restarts the ai-memory user service, updates the managed OpenCode Learn checkout, updates agent skills, and merges a marked block into `~/.bash_aliases`.
+The public [guisaliba/agents](https://github.com/guisaliba/agents) repository is the standalone source of the Claude Code + pstack agent stack. `install.sh` manages its clone at `~/.local/share/dotfiles/agents`. The agents component is a network and service action: its `apply.sh` installs packages, runs network install scripts, changes global Claude Code configuration, starts or restarts the ai-memory user service, updates agent skills, and merges marked blocks into `~/.bash_aliases` and `~/.bash_profile`.
 
-The managed checkout must be a clean Git worktree on the `main` branch with an approved `guisaliba/agents` remote. The installer refuses a dirty, detached, wrong-branch, wrong-remote, or diverged checkout. It never resets, cleans, stashes, or deletes.
+The managed checkout must be a clean Git worktree on the selected branch (`main` by default) with an approved `guisaliba/agents` remote. The installer refuses a dirty, detached, wrong-branch, wrong-remote, or diverged checkout. It never resets, cleans, stashes, or deletes.
+
+To test another branch of the agent stack, for example `pstack`:
+
+```sh
+./install.sh --components agents --agents-branch pstack
+```
+
+This switches a clean managed checkout to that branch. Run `./install.sh --components agents --agents-branch main` to go back.
 
 ## Risk gates
 
-`--yes` answers the component selection confirmation only. The agents component still shows a separate confirmation before it runs, because it changes services and installs software. Its confirmation lists package installs, network scripts, global OpenCode changes, ai-memory service changes, Learn update, skill update, and Bash merge.
+`--yes` answers the component selection confirmation only. The agents component still shows a separate confirmation before it runs, because it changes services and installs software. Its confirmation names the branch and lists package installs, network scripts, global agent harness changes, ai-memory service changes, skill update, and Bash merges.
 
 ## Verification
 
