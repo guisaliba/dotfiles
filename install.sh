@@ -672,7 +672,7 @@ run_agents_component() {
   printf '    - run network install scripts\n'
   printf '    - change global agent harness configuration\n'
   printf '    - start or restart the ai-memory user service\n'
-  printf '    - install or update agent skills\n'
+  printf '    - install or update agent plugins and generated skills\n'
   printf '    - merge marked blocks into ~/.bash_aliases and ~/.bash_profile\n'
   if ! confirm_yesno 'Run the agent stack apply now?'; then
     printf 'Skipped the agent stack apply.\n'

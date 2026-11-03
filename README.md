@@ -14,7 +14,7 @@ devices. The Claude Code + pstack agentic setup is provided by the public
 - Terminal: Alacritty
 - Prompt: Starship
 - Editors: VSCode, Zed
-- Agent harness: Claude Code with the pstack workflow, OpenCode Go workers, and [ai-memory](https://github.com/akitaonrails/ai-memory) continuity, provided by [`guisaliba/agents`](https://github.com/guisaliba/agents)
+- Agent harness: Claude Code with the pstack workflow, workers on a second model provider (currently OpenCode Go), and [ai-memory](https://github.com/akitaonrails/ai-memory) continuity, provided by [`guisaliba/agents`](https://github.com/guisaliba/agents)
 
 The optional Display layout enhancement and other Omarchy customizations are documented in [`omarchy/`](omarchy/README.md).
 
@@ -64,7 +64,7 @@ Before a file or tree changes, the installer writes a backup under `~/.local/sta
 
 ## Agents
 
-The public [guisaliba/agents](https://github.com/guisaliba/agents) repository is the standalone source of the Claude Code + pstack agent stack. `install.sh` manages its clone at `~/.local/share/dotfiles/agents`. The agents component is a network and service action: its `apply.sh` installs packages, runs network install scripts, changes global Claude Code configuration, starts or restarts the ai-memory user service, updates agent skills, and merges marked blocks into `~/.bash_aliases` and `~/.bash_profile`.
+The public [guisaliba/agents](https://github.com/guisaliba/agents) repository is the standalone source of the Claude Code + pstack agent stack. `install.sh` manages its clone at `~/.local/share/dotfiles/agents`. The agents component is a network and service action: its `apply.sh` installs packages, runs network install scripts, changes global Claude Code configuration, starts or restarts the ai-memory user service, installs or updates the pstack plugin, and merges marked blocks into `~/.bash_aliases` and `~/.bash_profile`.
 
 The managed checkout must be a clean Git worktree on the selected branch (`main` by default) with an approved `guisaliba/agents` remote. The installer refuses a dirty, detached, wrong-branch, wrong-remote, or diverged checkout. It never resets, cleans, stashes, or deletes.
 
