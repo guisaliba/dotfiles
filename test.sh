@@ -831,6 +831,7 @@ test_agents_refusals_and_failures() {
   git -C "$AGENT_CHECKOUT" checkout -b dev >/dev/null
   invoke 'y\n' 1 --components agents --yes
   err_contains 'must use branch main'
+  err_contains 'Pass --agents-branch main to switch a clean checkout'
 
   new_fixture
   make_agents_repo
@@ -872,6 +873,57 @@ test_agents_refusals_and_failures() {
 }
 
 test_agents_refusals_and_failures
+
+test_agents_branch_option() {
+  new_fixture
+  make_agents_repo
+  git -C "$AGENT_SOURCE" checkout -b pstack >/dev/null 2>&1
+  printf '%s\n' 'pstack' >"$AGENT_SOURCE/branch.txt"
+  git -C "$AGENT_SOURCE" add branch.txt
+  git -C "$AGENT_SOURCE" commit -m pstack >/dev/null
+  git -C "$AGENT_SOURCE" push origin pstack >/dev/null 2>&1
+  git -C "$AGENT_SOURCE" checkout main >/dev/null 2>&1
+
+  # A fresh clone uses the requested branch.
+  invoke 'y\n' 0 --components agents --yes --agents-branch pstack
+  file_contains "$AGENT_CHECKOUT/branch.txt" 'pstack'
+  file_contains "$AGENT_LOG" 'apply ran'
+
+  # Without the option, a checkout on another branch is refused, not moved.
+  : >"$AGENT_LOG"
+  invoke 'y\n' 1 --components agents --yes
+  err_contains 'must use branch main (found pstack)'
+  file_empty "$AGENT_LOG"
+
+  # With the option, a clean checkout switches back to main.
+  invoke 'y\n' 0 --components agents --yes --agents-branch main
+  file_absent "$AGENT_CHECKOUT/branch.txt"
+  file_contains "$AGENT_LOG" 'apply ran'
+
+  # A clean main checkout switches to pstack; --check reports the switch.
+  invoke '' 0 --check --components agents --agents-branch pstack
+  out_contains 'switch the clean checkout'
+  invoke 'y\n' 0 --components agents --yes --agents-branch pstack
+  file_contains "$AGENT_CHECKOUT/branch.txt" 'pstack'
+
+  # A dirty checkout is never switched.
+  printf '%s\n' 'dirty' >>"$AGENT_CHECKOUT/apply.sh"
+  invoke 'y\n' 1 --components agents --yes --agents-branch main
+  err_contains 'uncommitted changes'
+
+  # Option validation.
+  new_fixture
+  invoke '' 2 --agents-branch pstack
+  err_contains '--agents-branch is valid only with --components'
+  invoke '' 2 --components bash --agents-branch pstack
+  err_contains '--agents-branch requires agents to be a selected component'
+  invoke '' 2 --components agents --agents-branch 'bad..name'
+  err_contains 'invalid --agents-branch'
+  invoke '' 2 --components agents --agents-branch pstack --agents-branch main
+  err_contains 'duplicate option: --agents-branch'
+}
+
+test_agents_branch_option
 
 # --- Display enhancement installer ---
 
